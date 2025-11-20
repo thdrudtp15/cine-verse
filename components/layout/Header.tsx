@@ -1,16 +1,16 @@
 import Link from 'next/link';
+import { FilmIcon } from 'lucide-react';
+
+import Nav from '@/components/ui/Nav';
 
 const Header = () => {
     return (
-        <header className="content-container py-4 flex items-center justify-between">
-            <Link href="/" className="text-2xl font-bold">
+        <header className="content-container py-4 flex items-center justify-between relative">
+            <Link href="/" className="text-2xl font-bold flex items-center gap-2">
+                <FilmIcon className="w-8 h-8" />
                 CineVerse
             </Link>
-            <ul className="flex items-center gap-4">
-                <li>Home</li>
-                <li>About</li>
-                <li>Contact</li>
-            </ul>
+            <Nav />
             <div>Account</div>
         </header>
     );
