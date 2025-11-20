@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { FilmIcon } from 'lucide-react';
 
-import Nav from '@/components/ui/Nav';
+import Nav from '@/components/layout/header/Nav';
 
 const Header = () => {
     return (
