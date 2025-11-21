@@ -2,6 +2,8 @@ import { Roboto_Flex } from 'next/font/google';
 
 import type { Metadata } from 'next';
 
+import { Providers as TanstackProviders } from '@/providers/tanstack';
+
 import Header from '@/components/layout/header/Header';
 import Footer from '@/components/layout/footer/Footer';
 
@@ -25,9 +27,11 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={robotoFlex.className}>
-                <Header />
-                {children}
-                <Footer />
+                <TanstackProviders>
+                    <Header />
+                    {children}
+                    <Footer />
+                </TanstackProviders>
             </body>
         </html>
     );
