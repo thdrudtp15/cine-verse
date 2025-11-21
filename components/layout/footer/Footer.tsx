@@ -20,7 +20,7 @@ const Footer = () => {
                         TMDB
                     </Link>
                 </span>
-                <p className="text-sm">© 2025 Railway Corp. All rights reserved.</p>
+                <p className="text-sm">© 2025 CineVerse Corp. All rights reserved.</p>
             </div>
         </footer>
     );

@@ -102,7 +102,7 @@ const Nav = () => {
     );
 
     return (
-        <ul ref={ref} className="flex items-center gap-8 absolute left-1/2 -translate-x-1/2 hidden md:flex">
+        <ul ref={ref} className="flex z-1 items-center gap-8 absolute left-1/2 -translate-x-1/2 hidden md:flex">
             {NAV_ITEMS.map((item, index) => (
                 <NavItem key={index} title={item} onClick={() => handleItemClick(index)} open={openIndex === index}>
                     <NavContent open={openIndex === index} onClick={() => handleNavContentClick('')} />

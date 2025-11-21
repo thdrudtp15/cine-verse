@@ -1,9 +1,16 @@
+import { Roboto_Flex } from 'next/font/google';
+
 import type { Metadata } from 'next';
 
 import Header from '@/components/layout/header/Header';
-import Footer from '@/components/layout/Footer';
+import Footer from '@/components/layout/footer/Footer';
 
 import './globals.css';
+
+const robotoFlex = Roboto_Flex({
+    subsets: ['latin'],
+    weight: ['400', '700'],
+});
 
 export const metadata: Metadata = {
     title: 'Create Next App',
@@ -17,7 +24,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body>
+            <body className={robotoFlex.className}>
                 <Header />
                 {children}
                 <Footer />
