@@ -13,7 +13,7 @@ const isMovie = (content: MovieListItem | TvListItem): content is MovieListItem 
 const CardOverlay = React.memo(({ content }: { content: MovieListItem | TvListItem }) => {
     return (
         <Link
-            href={`/movies/${content.id}`}
+            href={`/${isMovie(content) ? 'movies' : 'tv'}/${content.id}`}
             className="absolute p-4
             rounded-lg
             inset-0 bg-gradient-to-t from-black via-black/20 to-black/10
@@ -26,7 +26,7 @@ const CardOverlay = React.memo(({ content }: { content: MovieListItem | TvListIt
                 {isMovie(content) ? content.overview : content.overview}
             </p>
 
-            <div className="group-hover:opacity-0 transition-opacity duration-300 absolute bottom-0 left-0 right-0 p-4">
+            <div className="transition-opacity absolute bottom-0 left-0 right-0 p-4">
                 <h3 className="text-(--foreground) text-2xl font-bold">
                     {isMovie(content) ? content.title : content.name}
                 </h3>

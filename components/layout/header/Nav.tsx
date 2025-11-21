@@ -11,7 +11,7 @@ type NavContentProps = {
     onClick: () => void;
 };
 
-const NAV_ITEMS: string[] = ['Movies', 'Dramas', 'Contact'];
+const NAV_ITEMS: string[] = ['영화', 'TV 프로그램', 'AI 추천'];
 
 const NavContent = memo(({ open, onClick }: NavContentProps) => {
     const handleClick = (e: React.MouseEvent<HTMLLIElement>) => {
@@ -29,7 +29,7 @@ const NavContent = memo(({ open, onClick }: NavContentProps) => {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="border border-(--border) rounded-md p-2 absolute top-full left-0 mt-1 bg-background-elevated"
+                    className="border border-(--border) rounded-md p-2 absolute top-full left-0 mt-1 bg-background-elevated text-nowrap"
                 >
                     <ul className="flex flex-col gap-2">
                         {menuItems.map((item, index) => (
