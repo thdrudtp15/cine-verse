@@ -35,6 +35,28 @@ export const getMovieVideos = async (slug: string) => {
 
 /**
  *
+ * @param slug - 영화 슬러그
+ * @returns 영화 키워드 정보
+ */
+export const getMovieKeywords = async (slug: string) => {
+    const response = await fetch(`${API_URL}/movie/${slug}/keywords?language=ko-KR`, OPTIONS);
+    const data = await response.json();
+    return data;
+};
+
+/**
+ *
+ * @param slug - 영화 슬러그
+ * @returns 영화 추천 정보
+ */
+export const getMovieRecommendations = async (slug: string) => {
+    const response = await fetch(`${API_URL}/movie/${slug}/recommendations?language=ko-KR`, OPTIONS);
+    const data = await response.json();
+    return data;
+};
+
+/**
+ *
  * @param category - 영화 또는 시리즈
  * @returns 인기 콘텐츠 목록
  */

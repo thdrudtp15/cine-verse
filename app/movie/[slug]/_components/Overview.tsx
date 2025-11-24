@@ -34,7 +34,7 @@ const Overview = ({ data }: { data: Promise<MovieDetail> }) => {
                     )}
                 </div>
                 <div className="flex-1 flex flex-col gap-4">
-                    <div className="flex gap-4">
+                    <div className="flex gap-2">
                         {movie.genres.map((genre) => (
                             <div
                                 key={genre.id}

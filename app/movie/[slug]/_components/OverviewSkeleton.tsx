@@ -5,7 +5,7 @@ const OverviewSkeleton = () => {
             <div className="content-container flex flex-col gap-8 md:flex-row md:items-center py-12 z-2">
                 <div className="w-80 h-110 rounded-lg relative skeleton animate-pulse duration-300 animate-pulse"></div>
                 <div className="flex-1 flex flex-col gap-4">
-                    <div className="flex gap-4">
+                    <div className="flex gap-2">
                         {['액션', '코미디', '공포'].map((genre, index) => (
                             <div
                                 key={index}

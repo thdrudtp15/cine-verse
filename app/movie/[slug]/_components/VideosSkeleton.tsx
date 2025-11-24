@@ -1,7 +1,7 @@
 const VideosSkeleton = () => {
     return (
         <div className="content-container w-full">
-            <div className="h-8 w-64 bg-background-elevated rounded animate-pulse mb-2" />
+            <div className="h-8 w-64 skeleton rounded-full animate-pulse mb-2" />
             <div className="overflow-x-auto">
                 <div className="flex gap-4 w-fit pb-4">
                     {[...Array(5)].map((_, index) => (

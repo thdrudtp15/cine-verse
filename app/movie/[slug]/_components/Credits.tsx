@@ -10,10 +10,9 @@ const Credits = ({ data }: { data: Promise<MovieCredits> }) => {
 
     return (
         <div className="content-container">
-            <div className="border-t border-(--border) pt-4"></div>
             <h2 className="text-2xl font-bold mb-2">주요 출연진</h2>
-            <div className="overflow-x-auto">
-                <div className="w-fit rounded-lg overflow-hidden flex gap-4 pb-2">
+            <div className="overflow-x-auto rounded-lg">
+                <div className="w-fit  overflow-hidden flex gap-4 pb-2">
                     {credits.cast.map((actor) => {
                         return (
                             <Link key={actor.id} href={`/person/${actor.id}`} className="rounded-lg w-40">

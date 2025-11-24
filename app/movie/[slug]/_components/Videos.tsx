@@ -13,13 +13,11 @@ const Videos = ({ data }: { data: Promise<MovieVideos> }) => {
 
     const [currentVideo, setCurrentVideo] = useState<VideoResult | null>(null);
 
-    console.log(videos.results);
-
     return (
         <>
             <div className="content-container w-full">
                 <h2 className="text-2xl font-bold mb-2">예고편 및 트레일러</h2>
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto rounded-lg">
                     <div className="flex gap-4 w-fit pb-4">
                         {videos.results.map((video) => (
                             <div

@@ -14,3 +14,10 @@ export type MovieListItem = {
     vote_average: number;
     vote_count: number;
 };
+
+export type MovieListResponse = {
+    page: number;
+    results: MovieListItem[];
+    total_pages: number;
+    total_results: number;
+};

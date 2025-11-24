@@ -18,13 +18,12 @@ import { popularContent, topRatedContent } from '@/lib/api/movies';
 
 const getPopularContent = unstable_cache(
     async (category: string) => {
-        try {
-            return await popularContent(category);
-        } catch (error) {
-            // 에러 발생 시 빈 배열 반환 (UI는 Empty 컴포넌트 표시)
-            console.error(`Failed to fetch ${category} popular content:`, error);
+        const popularContentList = await popularContent(category);
+        if (!popularContentList) {
+            console.error(`Failed to fetch ${category} popular content`);
             return [];
         }
+        return popularContentList;
     },
     ['popular-content'],
     {
@@ -35,13 +34,12 @@ const getPopularContent = unstable_cache(
 
 const getTopRatedContent = unstable_cache(
     async (category: string) => {
-        try {
-            return await topRatedContent(category);
-        } catch (error) {
-            // 에러 발생 시 빈 배열 반환 (UI는 Empty 컴포넌트 표시)
-            console.error(`Failed to fetch ${category} top rated content:`, error);
+        const topRatedContentList = await topRatedContent(category);
+        if (!topRatedContentList) {
+            console.error(`Failed to fetch ${category} top rated content`);
             return [];
         }
+        return topRatedContentList;
     },
     ['top-rated-content'],
     {
