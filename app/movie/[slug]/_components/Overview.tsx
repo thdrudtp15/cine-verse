@@ -9,8 +9,6 @@ const Overview = ({ data }: { data: Promise<MovieDetail> }) => {
     const backdropUrl = movie.backdrop_path ? `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}` : null;
     const posterUrl = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : null;
 
-    console.log(movie);
-
     return (
         <>
             {/* 히어로 섹션 백드롭 이미지 */}

@@ -2,12 +2,16 @@ import { unstable_cache } from 'next/cache';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
-import OverviewSkeleton from './_components/OverviewSkeleton';
 import Overview from './_components/Overview';
+import OverviewSkeleton from './_components/OverviewSkeleton';
 import Credits from './_components/Credits';
+import CreditsSkeleton from './_components/CreditsSkeleton';
+import Videos from './_components/Videos';
+import VideosSkeleton from './_components/VideosSkeleton';
 
 import { getMovieDetail } from '@/lib/api/movies';
 import { getMovieCredits as getMovieCreditsApi } from '@/lib/api/movies';
+import { getMovieVideos as getMovieVideosApi } from '@/lib/api/movies';
 
 import type { MovieDetail } from '@/types/movieDetail';
 
@@ -54,16 +58,20 @@ const Page = async ({ params }: { params: Promise<{ slug: string }> }) => {
     const { slug } = await params;
     const movie = getMovie(slug);
     const credits = getMovieCredits(slug);
+    const videos = getMovieVideosApi(slug);
 
     return (
-        <>
+        <div className="flex flex-col gap-4">
             <Suspense fallback={<OverviewSkeleton />}>
                 <Overview data={movie} />
             </Suspense>
-            <Suspense fallback={<OverviewSkeleton />}>
+            <Suspense fallback={<CreditsSkeleton />}>
                 <Credits data={credits} />
             </Suspense>
-        </>
+            <Suspense fallback={<VideosSkeleton />}>
+                <Videos data={videos} />
+            </Suspense>
+        </div>
     );
 };
 

@@ -24,6 +24,17 @@ export const getMovieCredits = async (slug: string) => {
 
 /**
  *
+ * @param slug - 영화 슬러그
+ * @returns 영화 비디오 정보
+ */
+export const getMovieVideos = async (slug: string) => {
+    const response = await fetch(`${API_URL}/movie/${slug}/videos?language=ko-KR`, OPTIONS);
+    const data = await response.json();
+    return data;
+};
+
+/**
+ *
  * @param category - 영화 또는 시리즈
  * @returns 인기 콘텐츠 목록
  */

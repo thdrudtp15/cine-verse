@@ -115,7 +115,7 @@ body {
 
 @layer components {
     .content-container {
-        @apply max-w-7xl mx-auto px-4;
+        @apply max-w-7xl mx-auto px-4 w-full;
     }
     .skeleton {
         @apply bg-gray-600/40 rounded-full w-full h-full;
