@@ -80,8 +80,8 @@ const Home = async ({ searchParams }: HomeProps) => {
     return (
         <>
             <Banner />
-            <Wrapper className="flex flex-col gap-4 mb-8">
-                <SectionHeader title="인기 콘텐츠" link="/movies/popular">
+            <Wrapper className="flex flex-col gap-4 mb-20">
+                <SectionHeader title="인기 콘텐츠" link="/movie/popular">
                     <SectionCategory
                         categories={[
                             { name: '영화', link: 'movie' },
@@ -98,7 +98,7 @@ const Home = async ({ searchParams }: HomeProps) => {
                 </Carousel>
             </Wrapper>
             <Wrapper className="flex flex-col gap-4">
-                <SectionHeader title="추천 명작" link="/movies/top_rated">
+                <SectionHeader title="추천 명작" link="/movie/top_rated">
                     <SectionCategory
                         categories={[
                             { name: '영화', link: 'movie' },

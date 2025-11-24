@@ -13,7 +13,7 @@ const isMovie = (content: MovieListItem | TvListItem): content is MovieListItem 
 const CardOverlay = React.memo(({ content }: { content: MovieListItem | TvListItem }) => {
     return (
         <Link
-            href={`/${isMovie(content) ? 'movies' : 'tv'}/${content.id}`}
+            href={`/${isMovie(content) ? 'movie' : 'tv'}/${content.id}`}
             className="absolute p-4
             rounded-lg
             inset-0 bg-gradient-to-t from-black via-black/20 to-black/10
@@ -42,7 +42,7 @@ CardOverlay.displayName = 'CardOverlay';
 
 const Card = React.memo(({ content }: { content: MovieListItem | TvListItem }) => {
     return (
-        <div className="rounded-lg group bg-gray-500/10 h-60 relative overflow-hidden transition-all duration-300">
+        <div className="rounded-lg group bg-gray-500/10 h-100 relative overflow-hidden transition-all duration-300">
             <Image
                 src={`https://image.tmdb.org/t/p/w500${content.poster_path}`}
                 alt={isMovie(content) ? content.title : content.name}
