@@ -117,4 +117,8 @@ body {
     .content-container {
         @apply max-w-7xl mx-auto px-4;
     }
+    .skeleton {
+        @apply bg-gray-600/40 rounded-full w-full h-full;
+    }
+    /* bg-gradient-to-br from-purple-500/10 via-blue-500/10 to-indigo-500/10 animate-pulse */
 }
