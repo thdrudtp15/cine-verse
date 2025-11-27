@@ -1,15 +1,9 @@
 import Search from './_components/Search';
 import List from './_components/List';
 
-type PageProps = {
-    searchParams: Promise<{ query: string; keywords: string; genre: string; rated: string }>;
-};
-
-const Page = async ({ searchParams }: PageProps) => {
-    const { query, keywords, genre, rated } = await searchParams;
-
+const Page = async () => {
     return (
-        <div className="content-container flex pt-16">
+        <div className="content-container flex pt-16 gap-4">
             <Search />
             <List />
         </div>

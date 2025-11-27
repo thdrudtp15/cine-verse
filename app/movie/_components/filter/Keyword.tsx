@@ -9,6 +9,35 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { searchKeyword } from '@/lib/api/search';
 import useParams from '@/hooks/useParams';
 import type { Keyword as KeywordType } from '@/types/keywords';
+import Section from './Section';
+import { getKeywords } from '@/lib/api/movies';
+
+const KeywordItem = React.memo(({ id, children }: { id: number; children: React.ReactNode }) => {
+    const { data, isLoading } = useQuery({
+        queryKey: ['keyword_data', id],
+        queryFn: () => getKeywords(id),
+    });
+
+    if (isLoading) {
+        return (
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-background-elevated border border-border rounded-full text-sm">
+                <div className="w-3.5 h-3.5 border-2 border-accent-primary border-t-transparent rounded-full animate-spin" />
+                <span className="text-foreground-muted">로딩 중...</span>
+            </div>
+        );
+    }
+
+    return (
+        <div className="group inline-flex items-center gap-2 px-3 py-1.5 bg-background-elevated border border-border rounded-full text-sm text-foreground hover:bg-background-tertiary hover:border-accent-primary/50 transition-all duration-200">
+            <span className="text-nowrap">{data?.name}</span>
+            <div className="flex items-center opacity-70 group-hover:opacity-100 transition-opacity duration-200">
+                {children}
+            </div>
+        </div>
+    );
+});
+
+KeywordItem.displayName = 'KeywordItem';
 
 const Keyword = React.memo(() => {
     const ref = useRef<HTMLInputElement | null>(null);
@@ -43,7 +72,7 @@ const Keyword = React.memo(() => {
     }, [input, queryClient, refetch]);
 
     return (
-        <div className="flex flex-col gap-4">
+        <Section title="키워드">
             <div className="relative w-full">
                 <Input
                     placeholder="키워드를 입력해주세요."
@@ -78,7 +107,7 @@ const Keyword = React.memo(() => {
                                     key={keyword.id}
                                     className="px-4 py-3 text-foreground hover:bg-background-tertiary cursor-pointer transition-colors duration-200 border-b border-divider last:border-b-0"
                                     onClick={() => {
-                                        setParams('keywords', [...(keywords || []), keyword.name].join(','));
+                                        setParams('keywords', [...(keywords || []), keyword.id].join(','));
                                     }}
                                 >
                                     {keyword.name}
@@ -87,27 +116,25 @@ const Keyword = React.memo(() => {
                     </ul>
                 )}
             </div>
-            <div className="flex gap-4">
+            <div className="flex gap-2 flex-wrap">
                 {keywords?.map((keyword) => (
-                    <button
-                        key={keyword}
-                        className="flex items-center gap-2 bg-background-elevated rounded-md px-4 py-2 hover:bg-background-tertiary transition-colors duration-200 cursor-pointer"
-                    >
-                        {keyword}
-                        <XIcon
-                            className="w-4 h-4 cursor-pointer"
-                            onClick={() => {
-                                if (keywords?.length === 1) {
-                                    deleteParams('keywords');
-                                    return;
-                                }
-                                setParams('keywords', keywords?.filter((k) => k !== keyword).join(','));
-                            }}
-                        />
-                    </button>
+                    <React.Fragment key={keyword}>
+                        <KeywordItem id={Number(keyword)}>
+                            <XIcon
+                                className="w-3.5 h-3.5 cursor-pointer hover:text-accent-primary transition-colors duration-200"
+                                onClick={() => {
+                                    if (keywords?.length === 1) {
+                                        deleteParams('keywords');
+                                        return;
+                                    }
+                                    setParams('keywords', keywords?.filter((k) => k !== keyword).join(','));
+                                }}
+                            />
+                        </KeywordItem>
+                    </React.Fragment>
                 ))}
             </div>
-        </div>
+        </Section>
     );
 });
 

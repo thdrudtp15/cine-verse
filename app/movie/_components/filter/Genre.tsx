@@ -6,6 +6,8 @@ import { useSearchParams } from 'next/navigation';
 
 import type { Genre } from '@/types/genre';
 
+import Section from './Section';
+
 const GenreSkeleton = () => {
     return (
         <>
@@ -29,7 +31,7 @@ const Genre = () => {
     const { setParams, deleteParams } = useParams();
 
     return (
-        <div className="flex flex-col gap-4">
+        <Section title="장르">
             <div className="relative w-full flex flex-wrap gap-2">
                 {!isLoading &&
                     genreList?.map((genre: Genre) => (
@@ -59,7 +61,7 @@ const Genre = () => {
                     ))}
                 {isLoading && <GenreSkeleton />}
             </div>
-        </div>
+        </Section>
     );
 };
 

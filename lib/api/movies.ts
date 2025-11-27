@@ -78,8 +78,52 @@ export const topRatedContent = async (category: string) => {
     return data.results;
 };
 
+/**
+ *
+ * @returns 영화 장르 목록
+ */
 export const movieGenres = async () => {
     const response = await fetch(`${API_URL}/genre/movie/list?language=ko-KR`, OPTIONS);
     const data = await response.json();
     return data.genres;
+};
+
+/**
+ *
+ * @param query - 검색어
+ * @param keywords - 키워드
+ * @param genre - 장르
+ * @param rated - 평점
+ * @returns 영화 목록
+ */
+
+export const searchMovies = async (query: string, keywords: string, genre: string, rated: string, page: number) => {
+    const [rateMin, rateMax] = rated.split(',').map(Number);
+
+    console.log(keywords, '키워드에요 잘 기억해요.');
+
+    const response = await fetch(
+        `${API_URL}/discover/movie?language=ko-KR
+        &query=${query}
+        &with_keywords=${keywords}
+        &with_genres=${genre}
+        &vote_average.gte=${rateMin}
+        &vote_average.lte=${rateMax}
+        &page=${page}
+        `,
+        OPTIONS
+    );
+    const data = await response.json();
+    return data.results;
+};
+
+/**
+ *
+ * @param keyword_id - 키워드 ID
+ * @returns 키워드 정보
+ */
+export const getKeywords = async (keyword_id: number) => {
+    const response = await fetch(`${API_URL}/keyword/${keyword_id}`, OPTIONS);
+    const data = await response.json();
+    return data;
 };

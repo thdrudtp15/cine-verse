@@ -3,6 +3,8 @@ import React from 'react';
 
 import Link from 'next/link';
 
+import NotExistImage from '@/components/ui/NotExistImage';
+
 import type { MovieListItem } from '@/types/movieList';
 import type { TvListItem } from '@/types/tvList';
 
@@ -43,13 +45,16 @@ CardOverlay.displayName = 'CardOverlay';
 const Card = React.memo(({ content }: { content: MovieListItem | TvListItem }) => {
     return (
         <div className="rounded-lg group bg-gray-500/10 h-100 relative overflow-hidden transition-all duration-300">
-            <Image
-                src={`https://image.tmdb.org/t/p/w500${content.poster_path}`}
-                alt={isMovie(content) ? content.title : content.name}
-                fill
-                className="object-cover object-center group-hover:scale-110 transition-transform duration-300"
-                sizes="(max-width: 768px) 232px, (max-width: 1200px) 188.5px"
-            />
+            {content.poster_path && (
+                <Image
+                    src={`https://image.tmdb.org/t/p/w500${content.poster_path}`}
+                    alt={isMovie(content) ? content.title : content.name}
+                    fill
+                    className="object-cover object-center group-hover:scale-110 transition-transform duration-300"
+                    sizes="(max-width: 768px) 419px, (max-width: 1200px) 309.5px, (max-width: 1024px) 345px"
+                />
+            )}
+            {!content.poster_path && <NotExistImage />}
             <CardOverlay content={content} />
         </div>
     );

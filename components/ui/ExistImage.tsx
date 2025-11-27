@@ -12,7 +12,7 @@ const ExistImage = ({
     width,
     height,
     fill,
-    loading,
+    loading = 'lazy',
     className,
 }: {
     src: string;

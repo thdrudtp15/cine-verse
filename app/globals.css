@@ -122,3 +122,39 @@ body {
     }
     /* bg-gradient-to-br from-purple-500/10 via-blue-500/10 to-indigo-500/10 animate-pulse */
 }
+
+/* RangeSlider Railway 스타일 */
+.rated-slider {
+    --range-slider-track-height: 6px;
+    --range-slider-thumb-size: 18px;
+}
+
+.rated-slider .range-slider__range {
+    background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+    border-radius: 3px;
+}
+
+.rated-slider .range-slider__track {
+    background: var(--background-tertiary);
+    border-radius: 3px;
+}
+
+.rated-slider .range-slider__thumb {
+    background: var(--accent-primary);
+    border: 2px solid var(--background);
+    box-shadow: 0 2px 8px rgba(139, 92, 246, 0.4);
+    transition: all 0.2s ease;
+    cursor: grab;
+}
+
+.rated-slider .range-slider__thumb:active {
+    cursor: grabbing;
+    background: var(--accent-primary-dark);
+    box-shadow: 0 2px 8px rgba(139, 92, 246, 0.8);
+}
+
+.rated-slider .range-slider__thumb:hover {
+    background: var(--accent-primary-hover);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.6);
+    transform: scale(1.1);
+}
