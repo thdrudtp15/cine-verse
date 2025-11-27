@@ -18,6 +18,7 @@
     "nextjs-toploader": "^3.9.17",
     "react": "19.2.0",
     "react-dom": "19.2.0",
+    "react-range-slider-input": "^3.3.2",
     "react-window": "^2.2.3",
     "react-window-infinite-loader": "^2.0.0",
     "zustand": "^5.0.8"
