@@ -1,6 +1,6 @@
 'use client';
-import { useEffect, useRef } from 'react';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import React, { useEffect, useRef } from 'react';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
 import { useInView } from 'motion/react';
 
@@ -28,6 +28,7 @@ const List = () => {
         fetchNextPage,
         isLoading,
         isFetchingNextPage,
+        hasNextPage,
     } = useInfiniteQuery({
         queryKey: ['movies_discovers', query, keywords, genre, rated],
         queryFn: ({ pageParam = 1 }) => searchMovies(query, keywords, genre, rated, pageParam),
@@ -36,16 +37,23 @@ const List = () => {
     });
 
     useEffect(() => {
-        if (!isInView) return;
+        if (!isInView || !hasNextPage) return;
         fetchNextPage();
-    }, [isInView]);
+    }, [isInView, hasNextPage]);
+
+    const uniqueData = new Map<string, MovieListItem>();
+    data?.pages.forEach((page) => {
+        page.results.forEach((content: MovieListItem) => {
+            uniqueData.set(`${content.id}-${content.title}`, content);
+        });
+    });
 
     return (
         <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {!isLoading &&
-                data?.pages
-                    .flatMap((page) => page.results)
-                    .map((content: MovieListItem) => <Card key={content.id} content={content} />)}
+                Array.from(uniqueData.values()).map((content: MovieListItem) => (
+                    <Card key={`${content.id}-${content.title}`} content={content} />
+                ))}
             {(isLoading || isFetchingNextPage) && <Skeleton count={12} />}
             <div ref={observerRef} />
         </div>
