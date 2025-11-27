@@ -77,3 +77,9 @@ export const topRatedContent = async (category: string) => {
     const data = await response.json();
     return data.results;
 };
+
+export const movieGenres = async () => {
+    const response = await fetch(`${API_URL}/genre/movie/list?language=ko-KR`, OPTIONS);
+    const data = await response.json();
+    return data.genres;
+};

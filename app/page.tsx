@@ -66,6 +66,7 @@ const Home = async () => {
     const popularMovies = getPopularContent('movie');
     const topRatedMovies = getTopRatedContent('movie');
 
+    // use를 사용해 컴포넌트 재활용?
     return (
         <>
             <Banner />
