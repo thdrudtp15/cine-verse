@@ -71,7 +71,7 @@ const Home = async () => {
         <>
             <Banner />
             <Wrapper className="flex flex-col gap-4 mb-20">
-                <SectionHeader title="인기 콘텐츠" link="/movie/popular"></SectionHeader>
+                <SectionHeader title="인기 콘텐츠" link="/movie"></SectionHeader>
                 <Carousel>
                     <Suspense fallback={<Skeleton count={6} />}>
                         <ContentList data={popularMovies} />
@@ -79,7 +79,7 @@ const Home = async () => {
                 </Carousel>
             </Wrapper>
             <Wrapper className="flex flex-col gap-4">
-                <SectionHeader title="추천 명작" link="/movie/top_rated"></SectionHeader>
+                <SectionHeader title="추천 명작" link="/movie"></SectionHeader>
                 <Carousel>
                     <Suspense fallback={<Skeleton count={6} />}>
                         <ContentList data={topRatedMovies} />

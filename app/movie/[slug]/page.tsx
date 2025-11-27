@@ -39,10 +39,12 @@ const getMovie = unstable_cache(
     async (slug: string) => {
         const movie = await getMovieDetail(slug);
 
-        if (!movie) {
-            notFound();
-        } else if (!isMovieDetail(movie)) {
+        console.log(isMovieDetail(movie), 'isMovieDetail');
+
+        if (!isMovieDetail(movie)) {
             // 타입 불일치 시 404
+            notFound();
+        } else if (!movie) {
             notFound();
         }
         return movie;
@@ -89,6 +91,11 @@ const getMovieRecommendations = unstable_cache(
 
 const Page = async ({ params }: { params: Promise<{ slug: string }> }) => {
     const { slug } = await params;
+
+    if (Number.isNaN(Number(slug))) {
+        notFound();
+    }
+
     const movie = getMovie(slug);
     const credits = getMovieCredits(slug);
     const videos = getMovieVideos(slug);

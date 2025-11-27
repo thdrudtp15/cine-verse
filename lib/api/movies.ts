@@ -100,8 +100,6 @@ export const movieGenres = async () => {
 export const searchMovies = async (query: string, keywords: string, genre: string, rated: string, page: number) => {
     const [rateMin, rateMax] = rated.split(',').map(Number);
 
-    console.log(keywords, '키워드에요 잘 기억해요.');
-
     const response = await fetch(
         `${API_URL}/discover/movie?language=ko-KR
         &query=${query}
@@ -114,7 +112,7 @@ export const searchMovies = async (query: string, keywords: string, genre: strin
         OPTIONS
     );
     const data = await response.json();
-    return data.results;
+    return data;
 };
 
 /**
