@@ -16,6 +16,10 @@ const Rated = React.memo(() => {
     const { setParams } = useParams();
 
     useEffect(() => {
+        if (rate.min === 0 && rate.max === 10) {
+            return;
+        }
+
         const STO = setTimeout(() => {
             setParams('rate', `${rate.min},${rate.max}`);
         }, 300);

@@ -39,7 +39,6 @@ const Genre = () => {
                                     deleteParams('genres');
                                     return;
                                 }
-                                console.log(genres.length, '길이');
                                 setParams('genres', genres.filter((g) => g !== genre.id.toString()).join(','));
                                 return;
                             }

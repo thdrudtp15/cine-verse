@@ -21,21 +21,25 @@ const SideBar = ({ data, keywords }: SideBarProps) => {
                 <div className="flex flex-col gap-2">
                     <h2 className="text-2xl font-bold">키워드</h2>
                     <div className="flex flex-wrap gap-2">
-                        {keywordsData.keywords.map((keyword) => (
-                            <Link
-                                href={`/movie?keywords=${keyword.id}`}
-                                key={keyword.id}
-                                className="bg-accent-primary/10 border border-accent-primary/30
+                        {keywordsData.keywords.length > 0 &&
+                            keywordsData.keywords.map((keyword) => (
+                                <Link
+                                    href={`/movie?keywords=${keyword.id}`}
+                                    key={keyword.id}
+                                    className="bg-accent-primary/10 border border-accent-primary/30
                                            backdrop-blur-sm rounded-full px-4 py-1 text-sm 
                                            text-accent-primary cursor-pointer 
                                            transition-all duration-300
                                            hover:bg-accent-primary/20 
                                            hover:text-accent-primary-hover
                                            "
-                            >
-                                {keyword.name}
-                            </Link>
-                        ))}
+                                >
+                                    {keyword.name}
+                                </Link>
+                            ))}
+                        {keywordsData.keywords.length === 0 && (
+                            <p className="text-sm text-foreground-muted">키워드가 없습니다.</p>
+                        )}
                     </div>
                 </div>
             </div>

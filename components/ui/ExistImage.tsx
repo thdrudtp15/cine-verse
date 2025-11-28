@@ -12,8 +12,9 @@ const ExistImage = ({
     width,
     height,
     fill,
-    loading = 'lazy',
+    loading,
     className,
+    priority,
 }: {
     src: string;
     alt: string;
@@ -22,6 +23,7 @@ const ExistImage = ({
     fill?: boolean;
     loading?: 'lazy' | 'eager';
     className?: string;
+    priority?: boolean;
 }) => {
     const [isLoading, setIsLoading] = useState(true);
 
@@ -38,6 +40,7 @@ const ExistImage = ({
                 width={width}
                 height={height}
                 fill={fill}
+                priority={priority}
                 loading={loading}
                 onLoad={handleLoad}
                 className={className}

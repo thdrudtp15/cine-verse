@@ -61,7 +61,7 @@ const Banner = React.memo(() => {
                         {/* CTA 버튼들 */}
                         <div className="flex flex-col sm:flex-row gap-4 pt-4">
                             <Link
-                                href="/search"
+                                href="/movie"
                                 className="group inline-flex items-center justify-center gap-2 px-8 py-4 rounded-lg bg-gradient-to-r from-accent-primary to-accent-secondary hover:from-accent-primary-hover hover:to-accent-secondary-hover text-foreground font-semibold text-lg transition-all duration-300 shadow-lg shadow-accent-primary/30 hover:shadow-xl hover:shadow-accent-primary/50 hover:scale-105"
                             >
                                 <svg

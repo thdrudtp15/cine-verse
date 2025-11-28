@@ -4,6 +4,9 @@ import Image from 'next/image';
 import getRuntime from '@/lib/utils/getRuntime';
 import type { MovieDetail } from '@/types/movieDetail';
 
+import ExistImage from '@/components/ui/ExistImage';
+import NotExistImage from '@/components/ui/NotExistImage';
+
 const Overview = ({ data }: { data: Promise<MovieDetail> }) => {
     const movie = use(data);
     const backdropUrl = movie.backdrop_path ? `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}` : null;
@@ -23,7 +26,7 @@ const Overview = ({ data }: { data: Promise<MovieDetail> }) => {
             <div className="z-2 content-container relative flex flex-col gap-8 md:flex-row md:items-center py-12 ">
                 <div className="w-80 h-110 rounded-lg overflow-hidden relative">
                     {posterUrl && (
-                        <Image
+                        <ExistImage
                             src={posterUrl}
                             alt={movie.title}
                             width={320}
@@ -32,6 +35,7 @@ const Overview = ({ data }: { data: Promise<MovieDetail> }) => {
                             className="object-cover object-center"
                         />
                     )}
+                    {!posterUrl && <NotExistImage />}
                 </div>
                 <div className="flex-1 flex flex-col gap-4">
                     <div className="flex gap-2">
