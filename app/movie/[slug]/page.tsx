@@ -12,6 +12,9 @@ import SideBar from './_components/SideBar';
 import SideBarSkeleton from './_components/SideBarSkeleton';
 import Recommendation from './_components/Recommendation';
 import RecommendationSkeleton from './_components/RecommendationSkeleton';
+import Duration from './_components/Duration';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
 
 import { getMovieDetail } from '@/lib/api/movies';
 import { getMovieCredits as getMovieCreditsApi } from '@/lib/api/movies';
@@ -38,8 +41,6 @@ const isMovieDetail = (movie: MovieDetail): movie is MovieDetail => {
 const getMovie = unstable_cache(
     async (slug: string) => {
         const movie = await getMovieDetail(slug);
-
-        console.log(isMovieDetail(movie), 'isMovieDetail');
 
         if (!isMovieDetail(movie)) {
             // 타입 불일치 시 404
@@ -91,6 +92,7 @@ const getMovieRecommendations = unstable_cache(
 
 const Page = async ({ params }: { params: Promise<{ slug: string }> }) => {
     const { slug } = await params;
+    const session = await getServerSession(authOptions);
 
     if (Number.isNaN(Number(slug))) {
         notFound();
@@ -104,13 +106,14 @@ const Page = async ({ params }: { params: Promise<{ slug: string }> }) => {
 
     return (
         <div className="flex flex-col gap-4">
+            <Duration movie={movie} session={session} />
             <Suspense fallback={<OverviewSkeleton />}>
                 <Overview data={movie} />
             </Suspense>
             <div className="content-container">
                 <div className="border-t border-(--border) pt-4"></div>
-                <div className="flex gap-4">
-                    <div className="flex-1 flex flex-col gap-8 overflow-hidden">
+                <div className="flex gap-4 md:flex-row flex-col">
+                    <div className="flex-1 flex flex-col gap-8 overflow-hidden ">
                         <Suspense fallback={<CreditsSkeleton />}>
                             <Credits data={credits} />
                         </Suspense>

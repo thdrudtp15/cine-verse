@@ -13,7 +13,7 @@ const SideBar = ({ data, keywords }: SideBarProps) => {
     const keywordsData = use(keywords);
 
     return (
-        <aside className="w-64 relative">
+        <aside className="w-full md:w-64 relative ">
             <div className="flex flex-col gap-4 sticky top-24">
                 {/* <div className="flex flex-col gap-2">
                     <h2 className="text-2xl font-bold">제작 비용</h2>

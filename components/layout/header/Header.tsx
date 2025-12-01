@@ -9,8 +9,6 @@ import { authOptions } from '@/pages/api/auth/[...nextauth]';
 const Header = async () => {
     const session = await getServerSession(authOptions);
 
-    console.log(session);
-
     return (
         <header className="py-4 fixed top-0 left-0 right-0 z-100 bg-background/95 backdrop-blur-md border-b border-border/50 shadow-lg shadow-black/20">
             <div className="content-container flex items-center justify-between">
