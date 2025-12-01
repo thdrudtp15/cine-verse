@@ -6,11 +6,11 @@ import Input from '@/components/ui/Input';
 import { XIcon } from 'lucide-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { searchKeyword } from '@/lib/api/search';
+import { searchKeyword } from '@/lib/api/keywords';
 import useParams from '@/hooks/useParams';
-import type { Keyword as KeywordType } from '@/types/keywords';
+import type { Keyword as KeywordType } from '@/types/movieKeywords';
 import Section from './Section';
-import { getKeywords } from '@/lib/api/movies';
+import { getKeywords } from '@/lib/api/keywords';
 
 const KeywordItem = React.memo(({ id, children }: { id: number; children: React.ReactNode }) => {
     const { data, isLoading } = useQuery({
@@ -43,7 +43,7 @@ const Keyword = React.memo(() => {
     const ref = useRef<HTMLInputElement | null>(null);
     const queryClient = useQueryClient();
 
-    const keywords = useSearchParams().get('keywords')?.split(',');
+    const keywords = useSearchParams()?.get('keywords')?.split(',') || [];
 
     const { setParams, deleteParams } = useParams();
 

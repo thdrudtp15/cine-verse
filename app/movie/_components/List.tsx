@@ -8,6 +8,7 @@ import { searchMovies } from '@/lib/api/movies';
 
 import Card from '@/components/content/Card';
 import Skeleton from '@/components/content/Skeleton';
+import Empty from '@/components/ui/Empty';
 
 import type { MovieListItem } from '@/types/movieList';
 
@@ -18,10 +19,10 @@ const List = () => {
     const isInView = useInView(observerRef);
 
     const searchParams = useSearchParams();
-    const query = searchParams.get('query') || '';
-    const keywords = searchParams.get('keywords') || '';
-    const genre = searchParams.get('genres') || '';
-    const rated = searchParams.get('rate') || '';
+    const query = searchParams?.get('query') || '';
+    const keywords = searchParams?.get('keywords') || '';
+    const genre = searchParams?.get('genres') || '';
+    const rated = searchParams?.get('rate') || '';
 
     const {
         data: data,
@@ -32,12 +33,17 @@ const List = () => {
     } = useInfiniteQuery({
         queryKey: ['movies_discovers', query, keywords, genre, rated],
         queryFn: ({ pageParam = 1 }) => searchMovies(query, keywords, genre, rated, pageParam),
-        getNextPageParam: (lastPage, pages) => lastPage.page + 1,
+        getNextPageParam: (lastPage, pages) => {
+            console.log(lastPage, 'lastPage');
+            console.log(pages, 'pages');
+            return lastPage.total_pages > lastPage.page ? lastPage.page + 1 : undefined;
+        },
         initialPageParam: 1,
     });
 
     useEffect(() => {
-        if (!isInView || !hasNextPage) return;
+        if (!isInView || !hasNextPage || isLoading) return;
+
         fetchNextPage();
     }, [isInView, hasNextPage]);
 
@@ -49,12 +55,18 @@ const List = () => {
     });
 
     return (
-        <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div
+            className={`flex-1 ${
+                isLoading || uniqueData.size > 0 ? 'grid' : 'block'
+            } grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4`}
+        >
             {!isLoading &&
-                Array.from(uniqueData.values()).map((content: MovieListItem) => (
-                    <Card key={`${content.id}-${content.title}`} content={content} />
+                uniqueData.size > 0 &&
+                Array.from(uniqueData.values()).map((content: MovieListItem, index: number) => (
+                    <Card key={`${content.id}-${content.title}`} content={content} priority={index < 6} />
                 ))}
             {(isLoading || isFetchingNextPage) && <Skeleton count={12} />}
+            {!isLoading && uniqueData.size === 0 && <Empty className="h-[500px]" />}
             <div ref={observerRef} />
         </div>
     );
