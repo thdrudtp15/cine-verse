@@ -23,6 +23,7 @@ const List = () => {
     const keywords = searchParams?.get('keywords') || '';
     const genre = searchParams?.get('genres') || '';
     const rated = searchParams?.get('rate') || '';
+    const sort = searchParams?.get('sort') || '';
 
     const {
         data: data,
@@ -31,11 +32,9 @@ const List = () => {
         isFetchingNextPage,
         hasNextPage,
     } = useInfiniteQuery({
-        queryKey: ['movies_discovers', query, keywords, genre, rated],
-        queryFn: ({ pageParam = 1 }) => searchMovies(query, keywords, genre, rated, pageParam),
-        getNextPageParam: (lastPage, pages) => {
-            console.log(lastPage, 'lastPage');
-            console.log(pages, 'pages');
+        queryKey: ['movies_discovers', query, keywords, genre, rated, sort],
+        queryFn: ({ pageParam = 1 }) => searchMovies(query, keywords, genre, rated, sort, pageParam),
+        getNextPageParam: (lastPage) => {
             return lastPage.total_pages > lastPage.page ? lastPage.page + 1 : undefined;
         },
         initialPageParam: 1,

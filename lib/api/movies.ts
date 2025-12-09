@@ -97,22 +97,46 @@ export const movieGenres = async () => {
  * @returns 영화 목록
  */
 
-export const searchMovies = async (query: string, keywords: string, genre: string, rated: string, page: number) => {
+export const searchMovies = async (
+    query: string,
+    keywords: string,
+    genre: string,
+    rated: string,
+    sort: string,
+    page: number
+) => {
     const [rateMin, rateMax] = rated.split(',').map(Number);
+
+    console.log(typeof sort, 'sort');
 
     const response = await fetch(
         `${API_URL}/discover/movie?language=ko-KR
-        &query=${query}
-        &with_keywords=${keywords}
-        &with_genres=${genre}
-        &vote_average.gte=${rateMin}
-        &vote_average.lte=${rateMax}
-        &page=${page}
+        ${query ? `&query=${query}` : ''}
+        ${keywords ? `&with_keywords=${keywords}` : ''}
+        ${genre ? `&with_genres=${genre}` : ''}
+        ${rated ? `&vote_average.gte=${rateMin}&vote_average.lte=${rateMax}` : ''}
+        ${page ? `&page=${page}` : ''}
+        ${sort ? `&vote_count.gte=50&sort_by=${sort}` : ''}
         `,
         OPTIONS
     );
     const data = await response.json();
 
-    console.log(data, 'data입니두');
     return data;
+};
+
+export const getMovieWatchProviders = async (slug: string) => {
+    const response = await fetch(`${API_URL}/movie/${slug}/watch/providers?language=ko-KR`, OPTIONS);
+    const data = await response.json();
+
+    if (!data.results?.KR) {
+        return {
+            data: [],
+            link: '',
+        };
+    }
+    return {
+        data: data.results.KR.flatrate,
+        link: data.results.KR.link,
+    };
 };

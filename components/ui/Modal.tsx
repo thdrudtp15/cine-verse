@@ -33,7 +33,7 @@ const Modal = ({ children, isOpen, onClose, title }: ModalProps) => {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.2 }}
-                    className="fixed inset-0 z-11 p-4 bg-black/90 backdrop-blur-sm flex items-center justify-center"
+                    className="fixed inset-0 z-[9999] p-4 bg-black/90 backdrop-blur-sm flex items-center justify-center"
                     onClick={onClose}
                 >
                     <div className="relative aspect-video w-full max-w-2xl flex flex-col">

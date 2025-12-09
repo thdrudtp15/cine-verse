@@ -11,7 +11,7 @@ type NavContentProps = {
     onClick: () => void;
 };
 
-const NAV_ITEMS: string[] = ['영화', 'AI 추천'];
+const NAV_ITEMS: string[] = ['AI 추천'];
 
 const NavContent = memo(({ open, onClick }: NavContentProps) => {
     const handleClick = (e: React.MouseEvent<HTMLLIElement>) => {

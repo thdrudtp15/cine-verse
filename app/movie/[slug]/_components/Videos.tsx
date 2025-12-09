@@ -8,9 +8,11 @@ import { PlayIcon } from 'lucide-react';
 import Empty from '@/components/ui/Empty';
 
 import type { VideoResult, MovieVideos } from '@/types/movieVideos';
+import type { MovieDetail } from '@/types/movieDetail';
 
-const Videos = ({ data }: { data: Promise<MovieVideos> }) => {
+const Videos = ({ data, movie }: { data: Promise<MovieVideos>; movie: Promise<MovieDetail> }) => {
     const videos = use(data);
+    const movieData = use(movie);
 
     const [currentVideo, setCurrentVideo] = useState<VideoResult | null>(null);
 
@@ -46,7 +48,7 @@ const Videos = ({ data }: { data: Promise<MovieVideos> }) => {
                     </div>
                 )}
             </div>
-            <VideoModal video={currentVideo} onClose={() => setCurrentVideo(null)} />
+            <VideoModal video={currentVideo} movie={movieData} onClose={() => setCurrentVideo(null)} />
         </>
     );
 };

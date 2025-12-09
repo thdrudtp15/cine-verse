@@ -24,7 +24,7 @@ const Duration = ({ movie, session }: Props) => {
             return;
         }
 
-        const response = await fetch('/api/visit', {
+        const response = await fetch('/api/interactions/visits', {
             method: 'POST',
             body: JSON.stringify({
                 movie: data,

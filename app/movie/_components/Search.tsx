@@ -3,6 +3,7 @@
 import Keyword from './filter/Keyword';
 import Genre from './filter/Genre';
 import Rated from './filter/Rated';
+import Sort from './filter/Sort';
 
 const Search = () => {
     return (
@@ -11,6 +12,7 @@ const Search = () => {
                 <Keyword />
                 <Genre />
                 {/* <Rated /> */}
+                <Sort />
             </div>
         </div>
     );

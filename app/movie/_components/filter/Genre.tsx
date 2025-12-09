@@ -19,7 +19,7 @@ const GenreSkeleton = () => {
 };
 
 const Genre = () => {
-    const genres = useSearchParams().get('genres')?.split(',') || [];
+    const genres = useSearchParams()?.get('genres')?.split(',') || [];
 
     const { setParams, deleteParams } = useParams();
 

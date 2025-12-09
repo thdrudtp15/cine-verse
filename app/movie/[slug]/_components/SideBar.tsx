@@ -1,6 +1,7 @@
 import { use } from 'react';
 import type { MovieDetail } from '@/types/movieDetail';
 import type { MovieKeywords } from '@/types/movieKeywords';
+
 import Link from 'next/link';
 
 type SideBarProps = {
@@ -15,9 +16,6 @@ const SideBar = ({ data, keywords }: SideBarProps) => {
     return (
         <aside className="w-full md:w-64 relative ">
             <div className="flex flex-col gap-4 sticky top-24">
-                {/* <div className="flex flex-col gap-2">
-                    <h2 className="text-2xl font-bold">제작 비용</h2>
-                </div> */}
                 <div className="flex flex-col gap-2">
                     <h2 className="text-2xl font-bold">키워드</h2>
                     <div className="flex flex-wrap gap-2">

@@ -1,20 +1,26 @@
 import { use } from 'react';
-import { Calendar, Clock, Star } from 'lucide-react';
+import { Calendar, Clock, Star, Play } from 'lucide-react';
 import Image from 'next/image';
 import getRuntime from '@/lib/utils/getRuntime';
 
 import type { MovieDetail } from '@/types/movieDetail';
+import type { WatchProviders } from '@/types/watchProviders';
 
 import ExistImage from '@/components/ui/ExistImage';
 import NotExistImage from '@/components/ui/NotExistImage';
 import Wish from './Wish';
+import ProviderItem from './ProviderItem';
 
 type Props = {
     data: Promise<MovieDetail>;
+    watchProviders: Promise<WatchProviders>;
 };
 
-const Overview = ({ data }: Props) => {
+const Overview = ({ data, watchProviders }: Props) => {
     const movie = use(data);
+    const watchProvidersData = use(watchProviders);
+    const { data: watchProvidersDataList, link } = watchProvidersData;
+
     const backdropUrl = movie.backdrop_path ? `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}` : null;
     const posterUrl = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : null;
 
@@ -77,6 +83,29 @@ const Overview = ({ data }: Props) => {
                             </span>
                         </div>
                     </div>
+                    {/* Watch Providers 섹션 */}
+                    {watchProvidersDataList && watchProvidersDataList.length > 0 && (
+                        <div className="flex flex-col gap-3 pt-2">
+                            <div className="flex items-center gap-2">
+                                <Play className="w-4 h-4 text-accent-primary" />
+                                <h3 className="text-sm font-semibold text-foreground">시청 가능 서비스</h3>
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                                {watchProvidersDataList?.map((provider) => (
+                                    <ProviderItem
+                                        key={provider.provider_id}
+                                        movie={movie}
+                                        link={link}
+                                        provider={provider}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                    {!watchProvidersDataList ||
+                        (watchProvidersDataList.length === 0 && (
+                            <div className="text-sm text-foreground-secondary">시청 가능 서비스 없음</div>
+                        ))}
                 </div>
             </div>
         </>

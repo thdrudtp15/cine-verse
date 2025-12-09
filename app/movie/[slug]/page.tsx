@@ -21,6 +21,7 @@ import { getMovieCredits as getMovieCreditsApi } from '@/lib/api/movies';
 import { getMovieVideos as getMovieVideosApi } from '@/lib/api/movies';
 import { getMovieKeywords as getMovieKeywordsApi } from '@/lib/api/movies';
 import { getMovieRecommendations as getMovieRecommendationsApi } from '@/lib/api/movies';
+import { getMovieWatchProviders as getMovieWatchProvidersApi } from '@/lib/api/movies';
 
 import type { MovieDetail } from '@/types/movieDetail';
 
@@ -95,6 +96,7 @@ const Page = async ({ params }: { params: Promise<{ slug: string }> }) => {
     const session = await getServerSession(authOptions);
 
     if (Number.isNaN(Number(slug))) {
+        console.log(slug, '숫자가 아닙니다');
         notFound();
     }
 
@@ -103,12 +105,13 @@ const Page = async ({ params }: { params: Promise<{ slug: string }> }) => {
     const videos = getMovieVideos(slug);
     const keywords = getMovieKeywords(slug);
     const recommendations = getMovieRecommendations(slug);
+    const watchProviders = getMovieWatchProvidersApi(slug);
 
     return (
         <div className="flex flex-col gap-4">
             <Duration movie={movie} session={session} />
             <Suspense fallback={<OverviewSkeleton />}>
-                <Overview data={movie} />
+                <Overview data={movie} watchProviders={watchProviders} />
             </Suspense>
             <div className="content-container">
                 <div className="border-t border-(--border) pt-4"></div>
@@ -118,7 +121,7 @@ const Page = async ({ params }: { params: Promise<{ slug: string }> }) => {
                             <Credits data={credits} />
                         </Suspense>
                         <Suspense fallback={<VideosSkeleton />}>
-                            <Videos data={videos} />
+                            <Videos data={videos} movie={movie} />
                         </Suspense>
                         <Suspense fallback={<RecommendationSkeleton />}>
                             <Recommendation data={recommendations} />

@@ -18,7 +18,7 @@ export const GET = async (request: Request, { params }: { params: Promise<{ movi
         const { movie_id } = await params;
 
         const { data, error } = await supabase
-            .from('user_interactions')
+            .from('interactions_wishes')
             .select('*')
             .eq('movie_id', movie_id)
             .eq('user_id', session.user.id)
@@ -59,7 +59,7 @@ export const POST = async (request: Request, { params }: { params: Promise<{ mov
 
         // 먼저 기존 레코드 확인
         const { data: existingData } = await supabase
-            .from('user_interactions')
+            .from('interactions_wishes')
             .select('*')
             .eq('movie_id', movie_id)
             .eq('user_id', session.user.id)
@@ -68,7 +68,7 @@ export const POST = async (request: Request, { params }: { params: Promise<{ mov
         if (existingData) {
             // 이미 찜한 경우 제거
             const { error } = await supabase
-                .from('user_interactions')
+                .from('interactions_wishes')
                 .delete()
                 .eq('movie_id', movie_id)
                 .eq('user_id', session.user.id);
@@ -82,11 +82,10 @@ export const POST = async (request: Request, { params }: { params: Promise<{ mov
         } else {
             // 찜하기 추가
             const { data, error } = await supabase
-                .from('user_interactions')
+                .from('interactions_wishes')
                 .insert({
                     movie_id: movie_id,
                     user_id: session.user.id,
-                    interaction_type: 'wish', // 또는 다른 타입
                 })
                 .select()
                 .single();
