@@ -1,0 +1,94 @@
+import { Sparkles, Clock, ExternalLink, Play, Heart } from 'lucide-react';
+import Recommendation from './_components/Recommendation';
+
+/**
+ * 행동분석 기반 영화 추천 페이지
+ */
+const BehaviorPage = async () => {
+    const behaviorItems = [
+        {
+            icon: Clock,
+            title: '영화 상세 페이지 5초 이상 체류',
+            description: '영화에 대한 관심도를 측정합니다.',
+        },
+        {
+            icon: ExternalLink,
+            title: '스트리밍 사이트 이동',
+            description: '실제 시청 의도를 파악합니다.',
+        },
+        {
+            icon: Play,
+            title: '예고편 감상',
+            description: '영화에 대한 호기심과 관심을 분석합니다.',
+        },
+        {
+            icon: Heart,
+            title: '위시리스트 추가',
+            description: '나중에 보고 싶은 영화를 추적합니다.',
+        },
+    ];
+
+    return (
+        <div className="content-container py-8">
+            {/* 헤더 섹션 */}
+            <div className="mb-8">
+                <div className="flex items-center gap-3 mb-2">
+                    <div className="w-12 h-12 rounded-full bg-gradient-primary flex items-center justify-center">
+                        <Sparkles className="w-6 h-6 text-white" />
+                    </div>
+                    <h1 className="text-4xl font-bold text-foreground">행동분석 영화 추천</h1>
+                </div>
+                <p className="text-foreground-secondary mt-2">
+                    사용자의 행동 패턴을 분석하여 맞춤형 영화를 추천합니다.
+                </p>
+            </div>
+
+            {/* 행동분석 설명 섹션 */}
+            <div className="bg-background-elevated border border-border rounded-lg p-6 mb-8 shadow-lg shadow-black/20">
+                <h2 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-accent-primary"></span>
+                    행동분석이란?
+                </h2>
+                <p className="text-foreground-secondary mb-6 leading-relaxed">
+                    CineVerse는 사용자의 다양한 행동 패턴을 수집하고 분석하여 개인화된 영화 추천을 제공합니다. 아래의
+                    행동 데이터를 통해 당신의 취향과 관심사를 파악합니다.
+                </p>
+
+                {/* 행동분석 항목 그리드 */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {behaviorItems.map((item, index) => {
+                        const Icon = item.icon;
+                        return (
+                            <div
+                                key={index}
+                                className="flex items-start gap-4 p-4 bg-background-tertiary rounded-lg border border-border hover:border-accent-primary/30 transition-all duration-200"
+                            >
+                                <div className="w-10 h-10 rounded-lg bg-accent-primary/10 border border-accent-primary/30 flex items-center justify-center flex-shrink-0">
+                                    <Icon className="w-5 h-5 text-accent-primary" />
+                                </div>
+                                <div className="flex-1">
+                                    <h3 className="text-sm font-semibold text-foreground mb-1">{item.title}</h3>
+                                    <p className="text-xs text-foreground-muted">{item.description}</p>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+
+                {/* 안내 메시지 */}
+                <div className="mt-6 p-4 bg-accent-primary/5 border border-accent-primary/20 rounded-lg">
+                    <p className="text-sm text-foreground-secondary">
+                        <span className="font-semibold text-accent-primary">💡 안내:</span> 수집된 행동 데이터는 AI
+                        모델을 통해 분석되며, 이를 바탕으로 당신만을 위한 맞춤형 영화 추천이 생성됩니다. 모든 데이터는
+                        개인정보 보호 정책에 따라 안전하게 관리됩니다.
+                    </p>
+                </div>
+            </div>
+
+            {/* 추천 받기 섹션 */}
+            <Recommendation />
+        </div>
+    );
+};
+
+export default BehaviorPage;

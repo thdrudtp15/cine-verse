@@ -140,3 +140,14 @@ export const getMovieWatchProviders = async (slug: string) => {
         link: data.results.KR.link,
     };
 };
+
+export const getMovieSearchByQuery = async (query: string) => {
+    try {
+        const response = await fetch(`${API_URL}/search/movie?language=ko-KR&query=${query}`, OPTIONS);
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(error);
+        throw new Error('영화 검색 실패');
+    }
+};

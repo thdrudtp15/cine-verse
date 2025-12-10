@@ -14,7 +14,7 @@ const SectionCategory = React.memo(({ categories, active, target }: SectionCateg
     const searchParams = useSearchParams();
 
     const createUrl = (value: string) => {
-        const params = new URLSearchParams(searchParams.toString());
+        const params = new URLSearchParams(searchParams?.toString());
         params.set(target, value);
         return `/?${params.toString()}`;
     };
