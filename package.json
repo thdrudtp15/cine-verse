@@ -6,7 +6,8 @@
         "dev": "next dev",
         "build": "next build",
         "start": "next start",
-        "lint": "eslint"
+        "lint": "eslint",
+        "supabase:types": "supabase gen types typescript --linked > types/supabase.ts"
     },
     "dependencies": {
         "@google/genai": "^1.32.0",
@@ -33,6 +34,7 @@
         "@types/react-dom": "^19",
         "eslint": "^9",
         "eslint-config-next": "16.0.3",
+        "supabase": "^2.65.9",
         "tailwindcss": "^4",
         "typescript": "^5"
     }

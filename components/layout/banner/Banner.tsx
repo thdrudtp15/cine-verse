@@ -81,7 +81,7 @@ const Banner = React.memo(() => {
                                 영화 검색하기
                             </Link>
                             <Link
-                                href="/recommendations"
+                                href="/recommendation"
                                 className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-lg bg-background-elevated/80 backdrop-blur-sm border border-border hover:border-accent-primary/50 text-foreground font-semibold text-lg transition-all duration-300 hover:bg-background-elevated"
                             >
                                 <svg

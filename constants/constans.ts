@@ -28,3 +28,10 @@ export const GENRES = [
     { id: 10752, name: '전쟁' },
     { id: 37, name: '서부' },
 ];
+
+export const INTERACTION_WEIGHTS = {
+    wish: 2.0, // 찜하기 - 가장 강한 신호
+    provider: 1.5, // 스트리밍 이동 - 보려는 의도
+    video: 0.8, // 예고편 - 관심
+    visit: 0.3, // 방문 - 약한 신호
+} as const;

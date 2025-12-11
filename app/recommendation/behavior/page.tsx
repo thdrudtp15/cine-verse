@@ -1,32 +1,78 @@
 import { Sparkles, Clock, ExternalLink, Play, Heart } from 'lucide-react';
 import Recommendation from './_components/Recommendation';
+import { supabase } from '@/lib/utils/supabase';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import { redirect } from 'next/navigation';
+import { unstable_cache } from 'next/cache';
+
+import {
+    getVisitsWeight,
+    getWishesWeight,
+    getProvidersWeight,
+    getVideosWeight,
+} from '@/lib/utils/getInteractionWeight';
+
+const behaviorItems = [
+    {
+        icon: Clock,
+        title: '영화 상세 페이지 5초 이상 체류',
+        description: '영화에 대한 관심도를 측정합니다.',
+    },
+    {
+        icon: ExternalLink,
+        title: '스트리밍 사이트 이동',
+        description: '실제 시청 의도를 파악합니다.',
+    },
+    {
+        icon: Play,
+        title: '예고편 감상',
+        description: '영화에 대한 호기심과 관심을 분석합니다.',
+    },
+    {
+        icon: Heart,
+        title: '위시리스트 추가',
+        description: '나중에 보고 싶은 영화를 추적합니다.',
+    },
+];
+
+const getUserBehaviorData = unstable_cache(
+    async (userId: string) => {
+        const data = await Promise.all([
+            supabase.from('interactions_providers').select('*, movie:movie_id(*)').eq('user_id', userId),
+            supabase.from('interactions_wishes').select('*, movie:movie_id(*)').eq('user_id', userId),
+            supabase.from('interactions_visits').select('*, movie:movie_id(*)').eq('user_id', userId),
+            supabase.from('interactions_videos').select('*, movie:movie_id(*)').eq('user_id', userId),
+        ]).then(([providersData, wishesData, visitsData, videosData]) => {
+            return [
+                getProvidersWeight(providersData.data || []),
+                getWishesWeight(wishesData.data || []),
+                getVisitsWeight(visitsData.data || []),
+                getVideosWeight(videosData.data || []),
+            ];
+        });
+        return data;
+    },
+    ['user_behavior_data'],
+    { tags: ['user_behavior_data'] }
+);
 
 /**
  * 행동분석 기반 영화 추천 페이지
  */
 const BehaviorPage = async () => {
-    const behaviorItems = [
-        {
-            icon: Clock,
-            title: '영화 상세 페이지 5초 이상 체류',
-            description: '영화에 대한 관심도를 측정합니다.',
-        },
-        {
-            icon: ExternalLink,
-            title: '스트리밍 사이트 이동',
-            description: '실제 시청 의도를 파악합니다.',
-        },
-        {
-            icon: Play,
-            title: '예고편 감상',
-            description: '영화에 대한 호기심과 관심을 분석합니다.',
-        },
-        {
-            icon: Heart,
-            title: '위시리스트 추가',
-            description: '나중에 보고 싶은 영화를 추적합니다.',
-        },
-    ];
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+        return redirect('/login');
+    }
+
+    const data = await getUserBehaviorData(session.user.id);
+
+    console.log(data);
+
+    if (!data) {
+        return <div>사용자 데이터 조회 실패</div>;
+    }
 
     return (
         <div className="content-container py-8">
