@@ -1,6 +1,6 @@
 import { Movies } from '@/types/database';
 
-export const getImbedText = (movie: Movies) => {
+export const getImbedText = (movie: Movies & { similarity?: number }) => {
     return `
     Movie: ${movie.title}(${movie.original_title})\n
     Overview : ${movie.overview}\n
@@ -11,6 +11,7 @@ export const getImbedText = (movie: Movies) => {
               )}\n`
             : ''
     }\n
+    ${movie.similarity ? `Similarity : ${movie.similarity}\n` : ''}
     Tagline : ${movie.tagline}\n
     `;
 };

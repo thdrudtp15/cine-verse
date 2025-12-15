@@ -38,24 +38,28 @@ const CardOverlay = React.memo(({ content }: { content: MovieListItem }) => {
 
 CardOverlay.displayName = 'CardOverlay';
 
-const Card = React.memo(({ content, priority = false }: { content: MovieListItem; priority?: boolean }) => {
-    return (
-        <div className="rounded-lg group bg-gray-500/10 h-100 relative overflow-hidden transition-all duration-300">
-            {content.poster_path && (
-                <Image
-                    src={`https://image.tmdb.org/t/p/w500${content.poster_path}`}
-                    alt={content.title}
-                    fill
-                    className="object-cover object-center group-hover:scale-110 transition-transform duration-300"
-                    sizes="(max-width: 768px) 419px, (max-width: 1200px) 309.5px, (max-width: 1024px) 345px"
-                    priority={priority}
-                />
-            )}
-            {!content.poster_path && <NotExistImage />}
-            <CardOverlay content={content} />
-        </div>
-    );
-});
+const Card = React.memo(
+    ({ content, priority = false, height = 100 }: { content: MovieListItem; priority?: boolean; height?: number }) => {
+        return (
+            <div
+                className={`rounded-lg group bg-gray-500/10 h-${height} relative overflow-hidden transition-all duration-300`}
+            >
+                {content.poster_path && (
+                    <Image
+                        src={`https://image.tmdb.org/t/p/w500${content.poster_path}`}
+                        alt={content.title}
+                        fill
+                        className="object-cover object-center group-hover:scale-110 transition-transform duration-300"
+                        sizes="(max-width: 768px) 419px, (max-width: 1200px) 309.5px, (max-width: 1024px) 345px"
+                        priority={priority}
+                    />
+                )}
+                {!content.poster_path && <NotExistImage />}
+                <CardOverlay content={content} />
+            </div>
+        );
+    }
+);
 
 Card.displayName = 'Card';
 

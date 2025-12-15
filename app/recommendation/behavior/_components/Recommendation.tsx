@@ -2,13 +2,18 @@
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import ErrorModal from '@/components/modal/ErrorModal';
-
+import RecommendationModal from '@/components/modal/RecommendationModal';
+import { useEffect } from 'react';
 /**
  * 추천 API 호출 함수
  */
-const getRecommendation = async () => {
+const getRecommendation = async (tasteMovies: TasteMovies[]) => {
     const response = await fetch('/api/recommendation', {
-        method: 'GET',
+        method: 'POST',
+        body: JSON.stringify(tasteMovies),
+        headers: {
+            'Content-Type': 'application/json',
+        },
     });
 
     if (!response.ok) {
@@ -22,19 +27,35 @@ const getRecommendation = async () => {
 /**
  * 행동분석 기반 영화 추천 컴포넌트
  */
-const Recommendation = () => {
+interface TasteMovies {
+    title: string;
+    original_title: string;
+    overview: string;
+    tagline: string;
+    genres: string;
+    similarity: number;
+}
+
+const Recommendation = ({ tasteMovies }: { tasteMovies: TasteMovies[] }) => {
     const queryClient = useQueryClient();
 
     const { data, isLoading, error, refetch, isError } = useQuery({
-        queryKey: ['recommendation'],
-        queryFn: getRecommendation,
+        queryKey: ['recommendation', tasteMovies],
+        queryFn: () => getRecommendation(tasteMovies),
         enabled: false,
         retry: false, // 에러 발생 시 자동 재시도 방지
     });
 
     // 에러 메시지 추출
     const errorMessage = error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.';
-    console.log(data, 'data입니다');
+
+    const { recommendationList } = data || { recommendationList: [] };
+
+    useEffect(() => {
+        return () => {
+            queryClient.resetQueries({ queryKey: ['recommendation'] });
+        };
+    }, []);
 
     return (
         <>
@@ -55,16 +76,12 @@ const Recommendation = () => {
                 </button>
 
                 {/* 추천 결과 표시 */}
-                {/* {data && (
-                    <div className="bg-background-elevated border border-border rounded-lg p-6 shadow-lg shadow-black/20">
-                        <h3 className="text-lg font-semibold text-foreground mb-3">추천 결과</h3>
-                        <div className="bg-background-tertiary rounded-lg p-4 border border-border">
-                            <pre className="text-sm text-foreground-secondary font-mono overflow-x-auto whitespace-pre-wrap">
-                                {JSON.stringify(data, null, 2)}
-                            </pre>
-                        </div>
-                    </div>
-                )} */}
+                {recommendationList.length > 0 && (
+                    <RecommendationModal
+                        recommendationList={recommendationList}
+                        onClose={() => queryClient.resetQueries({ queryKey: ['recommendation'] })}
+                    />
+                )}
             </div>
         </>
     );

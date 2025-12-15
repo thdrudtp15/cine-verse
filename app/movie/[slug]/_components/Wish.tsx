@@ -2,9 +2,10 @@
 import React from 'react';
 import { Heart, LoaderCircle } from 'lucide-react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import type { MovieDetail } from '@/types/movieDetail';
 
 type Props = {
-    movie_id: number;
+    movie: MovieDetail;
 };
 
 /**
@@ -13,14 +14,14 @@ type Props = {
  * 포스터 이미지 위에 표시되는 찜하기 버튼입니다.
  * 클릭 시 찜하기 상태를 토글합니다.
  */
-const Wish = ({ movie_id }: Props) => {
+const Wish = ({ movie }: Props) => {
     const queryClient = useQueryClient();
 
     // 찜하기 상태 조회
     const { data, isError, isLoading } = useQuery({
-        queryKey: ['wish', movie_id],
+        queryKey: ['wish', movie.id],
         queryFn: async () => {
-            const response = await fetch(`/api/wish/${movie_id}`, {
+            const response = await fetch(`/api/wish/${movie.id}`, {
                 method: 'GET',
             });
             if (!response.ok) {
@@ -39,9 +40,13 @@ const Wish = ({ movie_id }: Props) => {
     // 찜하기 토글 mutation
     const { mutate: toggleWish, isPending } = useMutation({
         mutationFn: async () => {
-            queryClient.setQueryData(['wish', movie_id], { isWished: !data?.isWished });
-            const response = await fetch(`/api/wish/${movie_id}`, {
+            queryClient.setQueryData(['wish', movie.id], { isWished: !data?.isWished });
+            const response = await fetch(`/api/wish/${movie.id}`, {
                 method: 'POST',
+                body: JSON.stringify(movie),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
             });
 
             if (!response.ok) {
@@ -51,7 +56,7 @@ const Wish = ({ movie_id }: Props) => {
         },
         onError: (error) => {
             console.log(error, 'error');
-            queryClient.setQueryData(['wish', movie_id], { isWished: !data?.isWished });
+            queryClient.setQueryData(['wish', movie.id], { isWished: !data?.isWished });
         },
     });
 

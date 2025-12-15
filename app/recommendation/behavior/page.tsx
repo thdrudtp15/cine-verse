@@ -5,7 +5,8 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { redirect } from 'next/navigation';
 import { unstable_cache } from 'next/cache';
-
+import { getTasteVector } from '@/lib/utils/getTasteVector';
+import { getTasteMovies } from '@/lib/actions/getTasteMovies';
 import {
     getVisitsWeight,
     getWishesWeight,
@@ -54,7 +55,7 @@ const getUserBehaviorData = unstable_cache(
         return data;
     },
     ['user_behavior_data'],
-    { tags: ['user_behavior_data'] }
+    { tags: ['user_behavior_data'], revalidate: 60 }
 );
 
 /**
@@ -68,11 +69,15 @@ const BehaviorPage = async () => {
 
     const data = await getUserBehaviorData(session.user.id);
 
-    console.log(data);
-
     if (!data) {
         return <div>사용자 데이터 조회 실패</div>;
     }
+
+    // 취향 벡터
+    const tasteVector = getTasteVector(data);
+
+    // 취향에 맞는 영화들
+    const tasteMovies = await getTasteMovies(tasteVector.vector);
 
     return (
         <div className="content-container py-8">
@@ -120,19 +125,10 @@ const BehaviorPage = async () => {
                         );
                     })}
                 </div>
-
-                {/* 안내 메시지 */}
-                <div className="mt-6 p-4 bg-accent-primary/5 border border-accent-primary/20 rounded-lg">
-                    <p className="text-sm text-foreground-secondary">
-                        <span className="font-semibold text-accent-primary">💡 안내:</span> 수집된 행동 데이터는 AI
-                        모델을 통해 분석되며, 이를 바탕으로 당신만을 위한 맞춤형 영화 추천이 생성됩니다. 모든 데이터는
-                        개인정보 보호 정책에 따라 안전하게 관리됩니다.
-                    </p>
-                </div>
             </div>
 
             {/* 추천 받기 섹션 */}
-            <Recommendation />
+            <Recommendation tasteMovies={tasteMovies} />
         </div>
     );
 };

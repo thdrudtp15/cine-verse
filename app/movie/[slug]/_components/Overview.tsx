@@ -48,7 +48,7 @@ const Overview = ({ data, watchProviders }: Props) => {
                         />
                     )}
                     {!posterUrl && <NotExistImage />}
-                    <Wish movie_id={movie.id} />
+                    <Wish movie={movie} />
                 </div>
                 <div className="flex-1 flex flex-col gap-4">
                     <div className="flex gap-2 flex-wrap items-center">

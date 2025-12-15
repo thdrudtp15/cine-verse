@@ -33,7 +33,7 @@ export const GET = async (request: Request, { params }: { params: Promise<{ movi
             return NextResponse.json({ message: error.message }, { status: 500 });
         }
 
-        return NextResponse.json({ isWished: true, data });
+        return NextResponse.json({ isWished: true });
     } catch (error) {
         console.error('찜하기 상태 조회 중 오류:', error);
         return NextResponse.json(
@@ -56,6 +56,26 @@ export const POST = async (request: Request, { params }: { params: Promise<{ mov
         }
 
         const { movie_id } = await params;
+        const movie = await request.json();
+
+        const { error: movieError } = await supabase.from('movies').upsert(
+            {
+                movie_id: movie.id,
+                title: movie.title,
+                original_title: movie.original_title,
+                overview: movie.overview,
+                tagline: movie.tagline,
+                genres: JSON.stringify(movie.genres),
+            },
+            {
+                onConflict: 'movie_id',
+            }
+        );
+
+        if (movieError) {
+            console.log(movieError, '영화 정보 저장 실패');
+            return NextResponse.json({ message: movieError.message }, { status: 500 });
+        }
 
         // 먼저 기존 레코드 확인
         const { data: existingData } = await supabase

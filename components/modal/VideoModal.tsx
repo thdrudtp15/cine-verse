@@ -84,7 +84,9 @@ const VideoModal = ({ video, movie, onClose }: VideoModalProps) => {
 
     return (
         <Modal isOpen={video !== null} onClose={onClose} title={video.name}>
-            <div id="youtube-player" className="w-full" />
+            <Modal.VideoContent title={video.name} onClose={onClose}>
+                <div id="youtube-player" className="w-full" />
+            </Modal.VideoContent>
         </Modal>
     );
 };
