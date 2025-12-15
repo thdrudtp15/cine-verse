@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/utils/supabase';
+import { movieUpsert } from '@/lib/actions/movieUpsert';
 
 export const POST = async (request: Request) => {
     const session = await getServerSession(authOptions);
@@ -14,23 +15,11 @@ export const POST = async (request: Request) => {
     console.log(movie, progress, 'movie, progress');
 
     // 영화 정보 DB 저장
-    const { error: movieError } = await supabase.from('movies').upsert(
-        {
-            movie_id: movie.id,
-            title: movie.title,
-            original_title: movie.original_title,
-            overview: movie.overview,
-            tagline: movie.tagline,
-            genres: JSON.stringify(movie.genres),
-        },
-        {
-            onConflict: 'movie_id',
-        }
-    );
+    const { error: movieUpsertError } = await movieUpsert(movie);
 
-    if (movieError) {
-        console.log(movieError, '영화 정보 저장 실패');
-        return NextResponse.json({ message: movieError.message }, { status: 500 });
+    if (movieUpsertError) {
+        console.log(movieUpsertError, '영화 정보 저장 실패');
+        return NextResponse.json({ message: movieUpsertError.message }, { status: 500 });
     }
 
     const { error } = await supabase.from('interactions_videos').insert({

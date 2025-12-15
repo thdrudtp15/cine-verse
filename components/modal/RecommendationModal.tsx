@@ -33,7 +33,10 @@ const RecommendationModal = ({
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 overflow-y-auto max-h-[70vh] pr-2 custom-scrollbar">
                     {recommendationList.map((movie) => (
-                        <div key={movie.id} className="transform transition-transform duration-300 hover:scale-105">
+                        <div
+                            key={movie.id}
+                            className="transform transition-transform duration-300 hover:scale-105 overflow-hidden"
+                        >
                             <Card content={movie as MovieListItem} height={100} />
                         </div>
                     ))}

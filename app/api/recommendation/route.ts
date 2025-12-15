@@ -26,15 +26,19 @@ export const POST = async (request: Request) => {
 
     try {
         const result = await getRecommendation(`
-               당신은 최고의 영화 추천 전문가입니다.
-          
-             ${tasteMoviesText ? `다음 영화와 유사한 영화를 추천해주세요\n${tasteMoviesText.join('\n')}` : ''}
+            [강력한 데이터 포맷 지시]
+            이 응답은 외부 시스템에서 파싱될 것입니다. 출력물은 반드시 **단 하나의 JSON 객체**여야 합니다.
+            **응답은 반드시 '{' 문자로 시작하여 '}' 문자로 끝나야 합니다.**
+            어떠한 마크다운 코드 블록, 설명, 인사말, 추가 텍스트, 주석, 그리고 JSON 외의 모든 문자를 포함해서는 안 됩니다.
 
-               응답은 반드시 JSON 형식으로, 키 이름은 'action_movies', 값은 문자열 배열로 구성해 주세요.
-               영화 제목은 반드시 영화의 영문 제목을 사용해주세요
-               어떤 설명이나 추가적인 문구 없이마크다운 코드 블록 없이, 순수한 텍스트 형태의 JSON 데이터 자체만 출력하세요.
+            당신은 최고의 영화 추천 전문가입니다.
+            ${tasteMoviesText ? `다음 영화와 유사한 영화를 5개 추천해주세요\n${tasteMoviesText.join('\n')}` : ''}
 
+            요구되는 JSON 구조:
+            - 키: 'action_movies'
+            - 값: 영문 제목 문자열 배열.
 
+            **지금 바로 '{' 문자를 사용하여 JSON 출력을 시작하세요.**
             `);
 
         if (!result.text) {
@@ -133,6 +137,7 @@ export const POST = async (request: Request) => {
             movie_id: movie.id,
             original_title: movie.original_title,
             overview: movie.overview,
+            poster_path: movie.poster_path,
             genres: JSON.stringify(getGenreData(movie.genre_ids)),
         }));
 

@@ -37,26 +37,22 @@ const behaviorItems = [
     },
 ];
 
-const getUserBehaviorData = unstable_cache(
-    async (userId: string) => {
-        const data = await Promise.all([
-            supabase.from('interactions_providers').select('*, movie:movie_id(*)').eq('user_id', userId),
-            supabase.from('interactions_wishes').select('*, movie:movie_id(*)').eq('user_id', userId),
-            supabase.from('interactions_visits').select('*, movie:movie_id(*)').eq('user_id', userId),
-            supabase.from('interactions_videos').select('*, movie:movie_id(*)').eq('user_id', userId),
-        ]).then(([providersData, wishesData, visitsData, videosData]) => {
-            return [
-                getProvidersWeight(providersData.data || []),
-                getWishesWeight(wishesData.data || []),
-                getVisitsWeight(visitsData.data || []),
-                getVideosWeight(videosData.data || []),
-            ];
-        });
-        return data;
-    },
-    ['user_behavior_data'],
-    { tags: ['user_behavior_data'], revalidate: 60 }
-);
+const getUserBehaviorData = async (userId: string) => {
+    const data = await Promise.all([
+        supabase.from('interactions_providers').select('*, movie:movie_id(*)').eq('user_id', userId),
+        supabase.from('interactions_wishes').select('*, movie:movie_id(*)').eq('user_id', userId),
+        supabase.from('interactions_visits').select('*, movie:movie_id(*)').eq('user_id', userId),
+        supabase.from('interactions_videos').select('*, movie:movie_id(*)').eq('user_id', userId),
+    ]).then(([providersData, wishesData, visitsData, videosData]) => {
+        return [
+            getProvidersWeight(providersData.data || []),
+            getWishesWeight(wishesData.data || []),
+            getVisitsWeight(visitsData.data || []),
+            getVideosWeight(videosData.data || []),
+        ];
+    });
+    return data;
+};
 
 /**
  * 행동분석 기반 영화 추천 페이지

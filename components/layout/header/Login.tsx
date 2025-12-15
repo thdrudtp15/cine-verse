@@ -5,6 +5,7 @@ import { signIn, signOut } from 'next-auth/react';
 import Image from 'next/image';
 import { LogOut, User, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import Link from 'next/link';
 
 import type { Session } from 'next-auth';
 import useOnClickOutside from '@/hooks/useOutsideClick';
@@ -86,6 +87,17 @@ const Login = ({ session }: { session: Session | null }) => {
                         <div className="px-4 py-3 border-b border-divider">
                             <p className="text-sm font-medium text-foreground truncate">{user?.name || '사용자'}</p>
                             <p className="text-xs text-foreground-muted truncate mt-1">{user?.email}</p>
+                        </div>
+
+                        <div className="py-1">
+                            <Link
+                                href="/mypage"
+                                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-background-tertiary transition-colors duration-150"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                <User className="w-4 h-4 text-foreground-secondary" />
+                                <span>마이페이지</span>
+                            </Link>
                         </div>
 
                         {/* 메뉴 항목 */}

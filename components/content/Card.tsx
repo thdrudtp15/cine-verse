@@ -15,7 +15,7 @@ const isMovie = (content: MovieListItem | TvListItem): content is MovieListItem 
 const CardOverlay = React.memo(({ content }: { content: MovieListItem }) => {
     return (
         <Link
-            href={`/${isMovie(content) ? 'movie' : 'tv'}/${content.id}`}
+            href={`/movie/${content.id}`}
             className="absolute p-4
             rounded-lg
             inset-0 bg-gradient-to-t from-black via-black/20 to-black/10

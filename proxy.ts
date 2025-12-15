@@ -5,6 +5,12 @@ import { NextResponse } from 'next/server';
 export const proxy = async (request: NextRequest) => {
     const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET! });
 
+    const pathname = request.nextUrl.pathname;
+
+    if (pathname === '/mypage') {
+        return NextResponse.redirect(new URL('/mypage/overview', request.url));
+    }
+
     if (!token) {
         return NextResponse.redirect(new URL('/login', request.url));
     }
