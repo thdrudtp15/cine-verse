@@ -8,7 +8,7 @@ export const proxy = async (request: NextRequest) => {
     const pathname = request.nextUrl.pathname;
 
     if (pathname === '/mypage') {
-        return NextResponse.redirect(new URL('/mypage/overview', request.url));
+        return NextResponse.redirect(new URL('/mypage/wishlist', request.url));
     }
 
     if (!token) {

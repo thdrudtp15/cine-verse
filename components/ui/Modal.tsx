@@ -28,7 +28,7 @@ const RecommendationContent = ({ children }: { children: React.ReactNode }) => {
 };
 
 const ErrorContent = ({ children }: { children: React.ReactNode }) => {
-    return <div className="grid grid-cols-2 gap-4">{children}</div>;
+    return <div className="max-w-2xl">{children}</div>;
 };
 
 const VideoContent = ({

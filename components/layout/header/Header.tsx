@@ -16,7 +16,7 @@ const Header = async () => {
                     <FilmIcon className="w-8 h-8" />
                     CineVerse
                 </Link>
-                <Nav />
+                {/* <Nav /> */}
                 <Login session={session} />
             </div>
         </header>

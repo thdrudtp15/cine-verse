@@ -22,7 +22,7 @@ interface MyPageTabsProps {
 
 const MyPageTabs = ({ statsCount, userId, activeTab }: MyPageTabsProps) => {
     const tabs = [
-        { id: 'overview' as TabType, label: '개요', icon: Film },
+        // { id: 'overview' as TabType, label: '개요', icon: Film },
         { id: 'wishlist' as TabType, label: '위시리스트', icon: Heart, count: statsCount.wishes },
         // { id: 'history' as TabType, label: '최근 본 영화', icon: Clock, count: statsCount.visits },
         { id: 'stats' as TabType, label: '통계', icon: BarChart3 },

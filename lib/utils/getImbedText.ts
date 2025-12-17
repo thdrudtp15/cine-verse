@@ -12,6 +12,6 @@ export const getImbedText = (movie: Movies & { similarity?: number }) => {
             : ''
     }\n
     ${movie.similarity ? `Similarity : ${movie.similarity}\n` : ''}
-    Tagline : ${movie.tagline}\n
+    Tagline : ${movie.tagline}\n ,
     `;
 };

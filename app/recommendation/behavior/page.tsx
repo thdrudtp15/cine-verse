@@ -16,25 +16,26 @@ import {
 
 const behaviorItems = [
     {
+        icon: Heart,
+        title: '위시리스트 추가',
+        description: '위시리스트 영화 분석',
+    },
+    {
         icon: Clock,
         title: '영화 상세 페이지 5초 이상 체류',
-        description: '영화에 대한 관심도를 측정합니다.',
+        description: '영화 상세 페이지 체류 시간 분석',
     },
     {
         icon: ExternalLink,
         title: '스트리밍 사이트 이동',
-        description: '실제 시청 의도를 파악합니다.',
+        description: '스트리밍 사이트 이동 분석',
     },
     {
         icon: Play,
         title: '예고편 감상',
-        description: '영화에 대한 호기심과 관심을 분석합니다.',
+        description: '영화 예고편 감상 분석',
     },
-    {
-        icon: Heart,
-        title: '위시리스트 추가',
-        description: '나중에 보고 싶은 영화를 추적합니다.',
-    },
+   
 ];
 
 const getUserBehaviorData = async (userId: string) => {
@@ -97,8 +98,9 @@ const BehaviorPage = async () => {
                     행동분석이란?
                 </h2>
                 <p className="text-foreground-secondary mb-6 leading-relaxed">
-                    CineVerse는 사용자의 다양한 행동 패턴을 수집하고 분석하여 개인화된 영화 추천을 제공합니다. 아래의
-                    행동 데이터를 통해 당신의 취향과 관심사를 파악합니다.
+                    사용자의 다양한 행동 패턴을 수집하고 분석하여 개인화된 영화 추천을 제공합니다.
+                    <br/>
+                    아래의 행동 데이터를 통해 취향과 관심사를 파악합니다.
                 </p>
 
                 {/* 행동분석 항목 그리드 */}

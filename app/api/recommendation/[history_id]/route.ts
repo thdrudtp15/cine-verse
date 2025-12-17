@@ -42,8 +42,6 @@ export const GET = async (request: Request, { params }: Params) => {
             return NextResponse.json({ movies: [] });
         }
 
-        console.log(movieListData, 'movieListData');
-
         // movie_list에서 movie_id 목록 가져오기
         const { data: movieDetailData, error: movieDetailError } = await supabase
             .from('movies')

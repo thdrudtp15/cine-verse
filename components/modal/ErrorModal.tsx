@@ -15,6 +15,7 @@ type ErrorModalProps = {
 const ErrorModal = ({ isOpen, onClose, errorMessage = '오류가 발생했습니다.', title = '오류' }: ErrorModalProps) => {
     return (
         <Modal isOpen={isOpen} onClose={onClose} title={title}>
+            <Modal.ErrorContent>
             <div className="bg-background-elevated border border-border rounded-lg p-6">
                 <div className="flex items-start gap-4">
                     <div className="w-12 h-12 rounded-full bg-error/10 border border-error/30 flex items-center justify-center flex-shrink-0">
@@ -34,6 +35,7 @@ const ErrorModal = ({ isOpen, onClose, errorMessage = '오류가 발생했습니
                     </button>
                 </div>
             </div>
+            </Modal.ErrorContent>
         </Modal>
     );
 };

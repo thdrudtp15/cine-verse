@@ -8,7 +8,7 @@ import { useEffect } from 'react';
  * 추천 API 호출 함수
  */
 const getRecommendation = async (tasteMovies: TasteMovies[]) => {
-    const response = await fetch('/api/recommendation', {
+    const response = await fetch('/api/recommendation/behavior', {
         method: 'POST',
         body: JSON.stringify(tasteMovies),
         headers: {
@@ -70,9 +70,9 @@ const Recommendation = ({ tasteMovies }: { tasteMovies: TasteMovies[] }) => {
                 <button
                     onClick={() => refetch()}
                     disabled={isLoading}
-                    className="px-6 py-3 rounded-lg bg-accent-primary hover:bg-accent-primary-hover text-white font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-accent-primary/30 hover:shadow-accent-primary/50"
+                    className="px-6 py-3 cursor-pointer rounded-lg bg-accent-primary hover:bg-accent-primary-hover text-white font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-accent-primary/30 hover:shadow-accent-primary/50"
                 >
-                    {isLoading ? '추천 받는중...' : '추천 받기'}
+                    {isLoading ? '추천 받는중...' : '영화 추천 받기'}
                 </button>
 
                 {/* 추천 결과 표시 */}

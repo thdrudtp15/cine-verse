@@ -81,7 +81,7 @@ export const authOptions: NextAuthOptions = {
     // 커스텀 페이지 경로 설정
     // NextAuth의 기본 페이지 대신 커스텀 페이지를 사용할 수 있습니다
     pages: {
-        // signIn: '/auth/signin',        // 로그인 페이지
+        signIn: '/login', // 로그인 페이지
         // signOut: '/auth/signout',       // 로그아웃 페이지
         // error: '/auth/error',           // 에러 페이지
         // verifyRequest: '/auth/verify-request', // 이메일 인증 요청 페이지
