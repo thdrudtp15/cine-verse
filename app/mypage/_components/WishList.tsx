@@ -17,7 +17,7 @@ const getWishlistMovies = unstable_cache(
         return { data, error };
     },
     ['wishlist_movies'],
-    { tags: ['wishlist_movies'], revalidate: 300 }
+    { tags: ['wishlist_movies'], revalidate: 60 * 60 * 24 }
 );
 
 const WishList = async ({ userId }: WishListProps) => {

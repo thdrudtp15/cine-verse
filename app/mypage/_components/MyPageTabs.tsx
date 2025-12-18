@@ -15,6 +15,8 @@ interface MyPageTabsProps {
         visits: number;
         videos: number;
         providers: number;
+        recommendationHistoryBehavior: number;
+        recommendationHistoryDialog: number;
     };
     userId: string;
     activeTab: string;
@@ -26,8 +28,15 @@ const MyPageTabs = ({ statsCount, userId, activeTab }: MyPageTabsProps) => {
         { id: 'wishlist' as TabType, label: '위시리스트', icon: Heart, count: statsCount.wishes },
         // { id: 'history' as TabType, label: '최근 본 영화', icon: Clock, count: statsCount.visits },
         { id: 'stats' as TabType, label: '통계', icon: BarChart3 },
-        { id: 'recommendation' as TabType, label: '추천내역', icon: Sparkles },
+        {
+            id: 'recommendation' as TabType,
+            label: '추천내역',
+            icon: Sparkles,
+            count: statsCount.recommendationHistoryBehavior + statsCount.recommendationHistoryDialog,
+        },
     ];
+
+    console.log(tabs[2].count, '알려주세요');
 
     return (
         <div className="bg-background-elevated border border-border rounded-2xl overflow-hidden shadow-lg shadow-black/20">

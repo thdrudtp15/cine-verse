@@ -173,6 +173,7 @@ export type Database = {
           movie_id: number
           original_title: string | null
           overview: string | null
+          poster_path: string | null
           tagline: string | null
           title: string
         }
@@ -184,6 +185,7 @@ export type Database = {
           movie_id: number
           original_title?: string | null
           overview?: string | null
+          poster_path?: string | null
           tagline?: string | null
           title: string
         }
@@ -195,6 +197,7 @@ export type Database = {
           movie_id?: number
           original_title?: string | null
           overview?: string | null
+          poster_path?: string | null
           tagline?: string | null
           title?: string
         }
@@ -204,16 +207,19 @@ export type Database = {
         Row: {
           created_at: string
           id: number
+          recommendation_type: string | null
           user_id: string | null
         }
         Insert: {
           created_at?: string
           id?: number
+          recommendation_type?: string | null
           user_id?: string | null
         }
         Update: {
           created_at?: string
           id?: number
+          recommendation_type?: string | null
           user_id?: string | null
         }
         Relationships: []
@@ -267,7 +273,22 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      match_movies: {
+        Args: {
+          match_count: number
+          match_threshold: number
+          taste_embedding: string
+        }
+        Returns: {
+          genres: Json
+          id: number
+          original_title: string
+          overview: string
+          similarity: number
+          tagline: string
+          title: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

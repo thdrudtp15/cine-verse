@@ -1,5 +1,4 @@
 import { BarChart3, Film } from 'lucide-react';
-import type { MovieListItem } from '@/types/movieList';
 
 interface StatsProps {
     statsCount: {
@@ -7,6 +6,8 @@ interface StatsProps {
         visits: number;
         videos: number;
         providers: number;
+        recommendationHistoryBehavior: number;
+        recommendationHistoryDialog: number;
     };
 }
 
@@ -49,17 +50,21 @@ const Stats = ({ statsCount }: StatsProps) => {
                 <div className="bg-background-tertiary border border-border rounded-xl p-6">
                     <h4 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                         <Film className="w-5 h-5 text-accent-primary" />
-                        영화 통계
+                        추천 통계
                     </h4>
                     <div className="space-y-4">
                         <div className="flex justify-between items-center">
-                            <span className="text-foreground-secondary">위시리스트 영화</span>
-                            <span className="text-xl font-bold text-foreground">{statsCount.wishes}</span>
+                            <span className="text-foreground-secondary">행동 분석 추천</span>
+                            <span className="text-xl font-bold text-foreground">
+                                {statsCount.recommendationHistoryBehavior}
+                            </span>
                         </div>
                         <div className="h-px bg-border" />
                         <div className="flex justify-between items-center">
-                            <span className="text-foreground-secondary">최근 본 영화</span>
-                            <span className="text-xl font-bold text-foreground">{statsCount.visits}</span>
+                            <span className="text-foreground-secondary">대화형 추천</span>
+                            <span className="text-xl font-bold text-foreground">
+                                {statsCount.recommendationHistoryDialog}
+                            </span>
                         </div>
                     </div>
                 </div>

@@ -16,8 +16,8 @@ const schema = {
             items: {
                 type: 'string',
             },
-            minItems: 5,
-            maxItems: 5,
+            minItems: 4,
+            maxItems: 4,
         },
     },
     required: ['recommendation_movies'],
@@ -84,12 +84,13 @@ export const getRecommendationList = async (json: string) => {
 //===================
 // 영화 추천 내역 저장
 //===================
-export const saveRecommendationHistory = async (session: Session) => {
+export const saveRecommendationHistory = async (session: Session, recommendation_type: 'behavior' | 'dialog') => {
     try {
         const { data, error } = await supabase
             .from('recommendations_history')
             .insert({
                 user_id: session.user.id,
+                recommendation_type,
             })
             .select('id')
             .single();

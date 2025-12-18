@@ -3,8 +3,8 @@ import { supabase } from '@/lib/utils/supabase';
 import { unstable_cache } from 'next/cache';
 import RecommendationItem from './RecommendationItem';
 
-const getRecommendationHistory = async () => await supabase.from('recommendations_history').select('*').order('created_at', { ascending: false });
-  
+const getRecommendationHistory = async () =>
+    await supabase.from('recommendations_history').select('*').order('created_at', { ascending: false });
 
 const RecommendationHistory = async () => {
     const { data, error } = await getRecommendationHistory();

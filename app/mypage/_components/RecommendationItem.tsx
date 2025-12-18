@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronDown, Sparkles } from 'lucide-react';
+import { ChevronDown, Brain, BarChart3 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { getDate } from '@/lib/utils/getDate';
 import Card from '@/components/content/Card';
@@ -9,12 +9,10 @@ import Skeleton from '@/components/content/Skeleton';
 import type { MovieListItem } from '@/types/movieList';
 import { useQuery } from '@tanstack/react-query';
 
+import type { RecommendationsHistory } from '@/types/database';
+
 interface RecommendationItemProps {
-    data: {
-        id: number;
-        created_at: string;
-        movies?: MovieListItem[];
-    };
+    data: RecommendationsHistory;
 }
 
 const RecommendationItem = ({ data }: RecommendationItemProps) => {
@@ -48,16 +46,16 @@ const RecommendationItem = ({ data }: RecommendationItemProps) => {
             >
                 <div className="flex items-center gap-3 flex-1 text-left">
                     <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-accent-primary/20 to-accent-secondary/20 flex items-center justify-center border border-accent-primary/30">
-                        <Sparkles
-                            className="w-5 h-5 text-ac
-                        
-                        
-                        cent-primary"
-                            strokeWidth={1.5}
-                        />
+                        {data.recommendation_type === 'behavior' ? (
+                            <BarChart3 className="w-5 h-5 text-accent-primary" strokeWidth={1.5} />
+                        ) : (
+                            <Brain className="w-5 h-5 text-accent-primary" strokeWidth={1.5} />
+                        )}
                     </div>
                     <div className="flex flex-col gap-1">
-                        <span className="text-sm font-semibold text-foreground">AI 추천</span>
+                        <span className="text-sm font-semibold text-foreground">
+                            {data.recommendation_type === 'behavior' ? 'AI 행동 추천' : 'AI 대화'}
+                        </span>
                         <span className="text-xs text-foreground-muted">{getDate(data.created_at)}</span>
                     </div>
                     {movieCount > 0 && (

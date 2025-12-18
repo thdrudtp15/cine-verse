@@ -53,10 +53,12 @@ export const POST = async (request: Request) => {
     try {
         const recommendation = await getRecommendationByGemini(prompt);
         const recommendationList = await getRecommendationList(recommendation);
-        const recommendationHistoryId = await saveRecommendationHistory(session);
+        const recommendationHistoryId = await saveRecommendationHistory(session, 'dialog');
         await saveRecommendationList(recommendationHistoryId, recommendationList);
 
-        revalidateTag('recommendation_history', 'max');
+        revalidateTag('recommendation_history', 'min');
+        revalidateTag('recommendation_list', 'min');
+        revalidateTag('user_stats_count', 'min');
         return NextResponse.json(
             { message: '영화 추천 및 내역, 리스트 저장 성공', recommendationList },
             { status: 200 }

@@ -12,22 +12,38 @@ import { notFound } from 'next/navigation';
 
 const getUserStatsCount = unstable_cache(
     async (userId: string) => {
-        const [wishes, visits, videos, providers] = await Promise.all([
-            supabase.from('interactions_wishes').select('*', { count: 'exact', head: true }).eq('user_id', userId),
-            supabase.from('interactions_visits').select('*', { count: 'exact', head: true }).eq('user_id', userId),
-            supabase.from('interactions_videos').select('*', { count: 'exact', head: true }).eq('user_id', userId),
-            supabase.from('interactions_providers').select('*', { count: 'exact', head: true }).eq('user_id', userId),
-        ]);
+        const [wishes, visits, videos, providers, recommendationHistoryBehavior, recommendationHistoryDialog] =
+            await Promise.all([
+                supabase.from('interactions_wishes').select('*', { count: 'exact', head: true }).eq('user_id', userId),
+                supabase.from('interactions_visits').select('*', { count: 'exact', head: true }).eq('user_id', userId),
+                supabase.from('interactions_videos').select('*', { count: 'exact', head: true }).eq('user_id', userId),
+                supabase
+                    .from('interactions_providers')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('user_id', userId),
+                supabase
+                    .from('recommendations_history')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('user_id', userId)
+                    .eq('recommendation_type', 'behavior'),
+                supabase
+                    .from('recommendations_history')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('user_id', userId)
+                    .eq('recommendation_type', 'dialog'),
+            ]);
 
         return {
             wishes: wishes.count || 0,
             visits: visits.count || 0,
             videos: videos.count || 0,
             providers: providers.count || 0,
+            recommendationHistoryBehavior: recommendationHistoryBehavior.count || 0,
+            recommendationHistoryDialog: recommendationHistoryDialog.count || 0,
         };
     },
     ['user_stats_count'],
-    { tags: ['user_stats_count'], revalidate: 300 }
+    { tags: ['user_stats_count'], revalidate: 60 * 60 * 24 }
 );
 
 const MyPage = async ({ params }: { params: Promise<{ tab: string }> }) => {
@@ -84,14 +100,6 @@ const MyPage = async ({ params }: { params: Promise<{ tab: string }> }) => {
                                 </h1>
                                 <div className="flex items-center gap-3 mb-4">
                                     <p className="text-foreground-secondary text-lg">{user?.email}</p>
-                                    <div className="h-1 w-1 rounded-full bg-foreground-muted" />
-                                    <span className="text-foreground-muted text-sm">
-                                        {statsCount.wishes +
-                                            statsCount.visits +
-                                            statsCount.videos +
-                                            statsCount.providers}
-                                        개 활동
-                                    </span>
                                 </div>
                             </div>
 
@@ -118,7 +126,7 @@ const MyPage = async ({ params }: { params: Promise<{ tab: string }> }) => {
                             {/* 액션 버튼 */}
                             <div className="flex flex-wrap gap-3">
                                 <Link
-                                    href="/recommendation/behavior"
+                                    href="/recommendation"
                                     className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-accent-primary to-accent-secondary hover:from-accent-primary-hover hover:to-accent-secondary-hover text-white font-semibold transition-all duration-200 shadow-lg shadow-accent-primary/40 hover:shadow-accent-primary/60 hover:scale-105"
                                 >
                                     <Sparkles className="w-5 h-5" />
