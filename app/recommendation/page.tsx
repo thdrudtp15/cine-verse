@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Sparkles, Brain, BarChart3, ArrowRight } from 'lucide-react';
+import { Sparkles, Brain, BarChart3, ArrowRight, FlaskConical } from 'lucide-react';
 
 const RecommendationPage = () => {
     return (
@@ -43,10 +43,7 @@ const RecommendationPage = () => {
                 </Link>
 
                 {/* 행동 분석 추천 카드 */}
-                <Link
-                    href="/recommendation/behavior"
-                    className="group bg-background-elevated border border-border rounded-lg p-8 shadow-lg shadow-black/20 hover:border-accent-secondary/50 transition-all duration-300 hover:shadow-xl hover:shadow-accent-secondary/10"
-                >
+                <div className="relative overflow-hidden group bg-background-elevated border border-border rounded-lg p-8 shadow-lg shadow-black/20 hover:border-accent-secondary/50 transition-all duration-300 hover:shadow-xl hover:shadow-accent-secondary/10">
                     <div className="flex items-start gap-4 mb-6">
                         <div className="w-14 h-14 rounded-xl bg-accent-secondary/10 border border-accent-secondary/30 flex items-center justify-center flex-shrink-0 group-hover:bg-accent-secondary/20 transition-colors">
                             <BarChart3 className="w-7 h-7 text-accent-secondary" />
@@ -63,7 +60,11 @@ const RecommendationPage = () => {
                         <span>추천 받기</span>
                         <ArrowRight className="w-5 h-5" />
                     </div>
-                </Link>
+                    <div className="group-hover:opacity-100 opacity-0 gap-4 transition-opacity duration-300 absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                        <FlaskConical className="w-6 h-6 text-white" />
+                        <span className="text-white text-lg font-medium">개발 중</span>
+                    </div>
+                </div>
             </div>
         </div>
     );

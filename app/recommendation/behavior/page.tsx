@@ -14,6 +14,8 @@ import {
     getVideosWeight,
 } from '@/lib/utils/getInteractionWeight';
 
+export const dynamic = 'force-dynamic';
+
 const behaviorItems = [
     {
         icon: Heart,
@@ -35,25 +37,24 @@ const behaviorItems = [
         title: '예고편 감상',
         description: '영화 예고편 감상 분석',
     },
-   
 ];
 
-const getUserBehaviorData = async (userId: string) => {
-    const data = await Promise.all([
-        supabase.from('interactions_providers').select('*, movie:movie_id(*)').eq('user_id', userId),
-        supabase.from('interactions_wishes').select('*, movie:movie_id(*)').eq('user_id', userId),
-        supabase.from('interactions_visits').select('*, movie:movie_id(*)').eq('user_id', userId),
-        supabase.from('interactions_videos').select('*, movie:movie_id(*)').eq('user_id', userId),
-    ]).then(([providersData, wishesData, visitsData, videosData]) => {
-        return [
-            getProvidersWeight(providersData.data || []),
-            getWishesWeight(wishesData.data || []),
-            getVisitsWeight(visitsData.data || []),
-            getVideosWeight(videosData.data || []),
-        ];
-    });
-    return data;
-};
+// const getUserBehaviorData = async (userId: string) => {
+//     const data = await Promise.all([
+//         supabase.from('interactions_providers').select('*, movie:movie_id(*)').eq('user_id', userId),
+//         supabase.from('interactions_wishes').select('*, movie:movie_id(*)').eq('user_id', userId),
+//         supabase.from('interactions_visits').select('*, movie:movie_id(*)').eq('user_id', userId),
+//         supabase.from('interactions_videos').select('*, movie:movie_id(*)').eq('user_id', userId),
+//     ]).then(([providersData, wishesData, visitsData, videosData]) => {
+//         return [
+//             getProvidersWeight(providersData.data || []),
+//             getWishesWeight(wishesData.data || []),
+//             getVisitsWeight(visitsData.data || []),
+//             getVideosWeight(videosData.data || []),
+//         ];
+//     });
+//     return data;
+// };
 
 /**
  * 행동분석 기반 영화 추천 페이지
@@ -64,17 +65,27 @@ const BehaviorPage = async () => {
         return redirect('/login');
     }
 
-    const data = await getUserBehaviorData(session.user.id);
+    // const data = await getUserBehaviorData(session.user.id);
+    const { data: wishesData, error: wishesError } = await supabase
+        .from('interactions_wishes')
+        .select('*, movie:movie_id(*)')
+        .eq('user_id', session.user.id);
 
-    if (!data) {
-        return <div>사용자 데이터 조회 실패</div>;
+    if (wishesError || !wishesData) {
+        return <div className="content-container py-8">사용자 데이터 조회 실패</div>;
     }
 
     // 취향 벡터
-    const tasteVector = getTasteVector(data);
+    const tasteVector = getTasteVector(wishesData);
 
     // 취향에 맞는 영화들
-    const tasteMovies = await getTasteMovies(tasteVector.vector);
+    const { data: tasteMovies, error: tasteMoviesError } = await getTasteMovies(tasteVector.toString());
+
+    if (tasteMoviesError) {
+        return <div className="content-container py-8">영화 추천 실패</div>;
+    }
+
+    console.log(tasteMovies, '취향벡터 맞는 영화들');
 
     return (
         <div className="content-container py-8">
@@ -99,7 +110,7 @@ const BehaviorPage = async () => {
                 </h2>
                 <p className="text-foreground-secondary mb-6 leading-relaxed">
                     사용자의 다양한 행동 패턴을 수집하고 분석하여 개인화된 영화 추천을 제공합니다.
-                    <br/>
+                    <br />
                     아래의 행동 데이터를 통해 취향과 관심사를 파악합니다.
                 </p>
 

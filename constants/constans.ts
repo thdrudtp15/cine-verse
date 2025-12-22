@@ -30,8 +30,8 @@ export const GENRES = [
 ];
 
 export const INTERACTION_WEIGHTS = {
-    wish: 5.0, // 찜하기 - 가장 강한 신호
-    provider: 2.0, // 스트리밍 이동 - 보려는 의도
+    wish: 2.0, // 찜하기 - 가장 강한 신호
+    provider: 1.5, // 스트리밍 이동 - 보려는 의도
     video: 1.0, // 예고편 - 관심
-    visit: 0.3, // 방문 - 약한 신호
+    visit: 0.5, // 방문 - 약한 신호
 } as const;

@@ -5,13 +5,13 @@ const useParams = () => {
     const searchParams = useSearchParams();
 
     const setParams = (key: string, value: string) => {
-        const params = new URLSearchParams(searchParams);
+        const params = new URLSearchParams(searchParams?.toString() || '');
         params.set(key, value);
         router.push(`?${params.toString()}`);
     };
 
     const deleteParams = (key: string) => {
-        const params = new URLSearchParams(searchParams);
+        const params = new URLSearchParams(searchParams?.toString() || '');
         params.delete(key);
         router.push(`?${params.toString()}`);
     };

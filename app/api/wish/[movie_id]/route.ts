@@ -4,7 +4,7 @@ import { supabase } from '@/lib/utils/supabase';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { movieUpsert } from '@/lib/actions/movieUpsert';
-import { updateTag } from 'next/cache';
+import { revalidateTag } from 'next/cache';
 import { movieWish } from '@/lib/actions/movieWish';
 
 /**
@@ -71,11 +71,15 @@ export const POST = async (request: Request, { params }: { params: Promise<{ mov
         }
 
         const isWished = await movieWish(movie, session.user.id);
+        revalidateTag('wishlist_movies', { expire: 0 });
+        revalidateTag('user_stats_count', { expire: 0 });
         if (isWished) {
             return NextResponse.json({ message: '찜하기가 추가되었습니다' }, { status: 200 });
         } else {
             return NextResponse.json({ message: '찜하기가 제거되었습니다' }, { status: 200 });
         }
+
+        // 캐시 즉시 무효화
     } catch (error) {
         console.error('찜하기 처리 중 오류:', error);
         return NextResponse.json(

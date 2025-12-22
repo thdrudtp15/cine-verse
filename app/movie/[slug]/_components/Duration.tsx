@@ -32,7 +32,6 @@ const Duration = ({ movie, session }: Props) => {
             }),
         });
 
-        console.log(response, 'response');
         if (!response.ok) {
             throw new Error('Failed to visit movie');
         }

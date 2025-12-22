@@ -3,14 +3,16 @@ import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
 
 import Input from '@/components/ui/Input';
+import Section from './Section';
 import { XIcon } from 'lucide-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { searchKeyword } from '@/lib/api/keywords';
 import useParams from '@/hooks/useParams';
-import type { Keyword as KeywordType } from '@/types/movieKeywords';
-import Section from './Section';
+
 import { getKeywords } from '@/lib/api/keywords';
+
+import type { Keyword as KeywordType } from '@/types/movieKeywords';
 
 const KeywordItem = React.memo(({ id, children }: { id: number; children: React.ReactNode }) => {
     const { data, isLoading } = useQuery({

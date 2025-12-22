@@ -36,8 +36,6 @@ const MyPageTabs = ({ statsCount, userId, activeTab }: MyPageTabsProps) => {
         },
     ];
 
-    console.log(tabs[2].count, '알려주세요');
-
     return (
         <div className="bg-background-elevated border border-border rounded-2xl overflow-hidden shadow-lg shadow-black/20">
             {/* 탭 헤더 */}

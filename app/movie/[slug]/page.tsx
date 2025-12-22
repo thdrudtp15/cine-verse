@@ -110,26 +110,16 @@ const Page = async ({ params }: { params: Promise<{ slug: string }> }) => {
     return (
         <div className="flex flex-col gap-4">
             <Duration movie={movie} session={session} />
-            <Suspense fallback={<OverviewSkeleton />}>
-                <Overview data={movie} watchProviders={watchProviders} />
-            </Suspense>
+            <Overview data={movie} watchProviders={watchProviders} />
             <div className="content-container">
                 <div className="border-t border-(--border) pt-4"></div>
                 <div className="flex gap-4 md:flex-row flex-col">
                     <div className="flex-1 flex flex-col gap-8 overflow-hidden ">
-                        <Suspense fallback={<CreditsSkeleton />}>
-                            <Credits data={credits} />
-                        </Suspense>
-                        <Suspense fallback={<VideosSkeleton />}>
-                            <Videos data={videos} movie={movie} />
-                        </Suspense>
-                        <Suspense fallback={<RecommendationSkeleton />}>
-                            <Recommendation data={recommendations} />
-                        </Suspense>
+                        <Credits data={credits} />
+                        <Videos data={videos} movie={movie} />
+                        <Recommendation data={recommendations} />
                     </div>
-                    <Suspense fallback={<SideBarSkeleton />}>
-                        <SideBar data={movie} keywords={keywords} />
-                    </Suspense>
+                    <SideBar data={movie} keywords={keywords} />
                 </div>
             </div>
         </div>

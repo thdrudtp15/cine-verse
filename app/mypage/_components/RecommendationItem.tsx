@@ -35,6 +35,7 @@ const RecommendationItem = ({ data }: RecommendationItemProps) => {
     });
 
     const movies = recommendationData?.movies || [];
+    console.log(movies, '내가 기필코 한다.');
     const movieCount = movies.length;
 
     return (

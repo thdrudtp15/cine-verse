@@ -69,29 +69,22 @@ export const getProvidersWeight = (data: InteractionProvidersWithMovies[]) => {
 
 // 예고편 가중치 계산
 export const getVideosWeight = (data: InteractionVideosWithMovies[]) => {
-    const obj: Record<number, number> = {};
+    const seen = new Set<number>();
+    const uniqueData: InteractionVideosWithMovies[] = [];
+
     data.forEach((item: InteractionVideosWithMovies) => {
-        if (item.movie_id) {
-            if (!obj[item.movie_id]) {
-                obj[item.movie_id] = 1;
-            }
-            obj[item.movie_id]++;
+        if (item.movie_id && !seen.has(item.movie_id)) {
+            seen.add(item.movie_id);
+            uniqueData.push(item);
         }
     });
 
-    const array: (InteractionVideosWithMovies & { weight: number; imbed_text: string; interaction_type: 'video' })[] =
-        [];
-
-    Object.entries(obj).map(([movie_id, count]) => {
-        const item = data.find((item: InteractionVideosWithMovies) => item.movie_id === parseInt(movie_id));
-        if (!item) return null;
-        array.push({
+    return uniqueData.map((item: InteractionVideosWithMovies) => {
+        return {
             ...item,
-            weight: INTERACTION_WEIGHTS.video * count,
-            imbed_text: getImbedText(item?.movie),
-            interaction_type: 'video',
-        });
+            weight: INTERACTION_WEIGHTS.video,
+            imbed_text: getImbedText(item.movie),
+            interaction_type: 'video' as const,
+        };
     });
-
-    return array;
 };

@@ -56,9 +56,9 @@ export const POST = async (request: Request) => {
         const recommendationHistoryId = await saveRecommendationHistory(session, 'dialog');
         await saveRecommendationList(recommendationHistoryId, recommendationList);
 
-        revalidateTag('recommendation_history', 'min');
-        revalidateTag('recommendation_list', 'min');
-        revalidateTag('user_stats_count', 'min');
+        revalidateTag('recommendation_history', { expire: 0 });
+        revalidateTag('recommendation_list', { expire: 0 });
+        revalidateTag('user_stats_count', { expire: 0 });
         return NextResponse.json(
             { message: '영화 추천 및 내역, 리스트 저장 성공', recommendationList },
             { status: 200 }

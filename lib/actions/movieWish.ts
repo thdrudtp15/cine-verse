@@ -1,6 +1,5 @@
 'use server';
 import { supabase } from '@/lib/utils/supabase';
-import { revalidateTag } from 'next/cache';
 import type { Movies } from '@/types/database';
 
 export const movieWish = async (movie: Movies, userId: string) => {
@@ -22,9 +21,7 @@ export const movieWish = async (movie: Movies, userId: string) => {
         if (error) {
             console.error('찜하기 제거 실패:', error);
         }
-        // 캐시 즉시 무효화
-        revalidateTag('wishlist_movies', 'min');
-        revalidateTag('user_stats_count', 'min');
+
         return false;
     } else {
         // 찜하기 추가
@@ -42,9 +39,6 @@ export const movieWish = async (movie: Movies, userId: string) => {
             throw new Error('찜하기 추가 실패');
         }
 
-        // 캐시 즉시 무효화
-        revalidateTag('wishlist_movies', 'min');
-        revalidateTag('user_stats_count', 'min');
         return true;
     }
 };

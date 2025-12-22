@@ -6,18 +6,6 @@ import type { Genre } from '@/types/genre';
 import Section from './Section';
 import { GENRES } from '@/constants/constans';
 
-const GenreSkeleton = () => {
-    return (
-        <>
-            <div className="w-18 h-10 skeleton rounded-full animate-pulse"></div>
-            <div className="w-18 h-10 skeleton rounded-full animate-pulse"></div>
-            <div className="w-18 h-10 skeleton rounded-full animate-pulse"></div>
-            <div className="w-18 h-10 skeleton rounded-full animate-pulse"></div>
-            <div className="w-18 h-10 skeleton rounded-full animate-pulse"></div>
-        </>
-    );
-};
-
 const Genre = () => {
     const genres = useSearchParams()?.get('genres')?.split(',') || [];
 

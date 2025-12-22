@@ -45,7 +45,7 @@ export const GET = async (request: Request, { params }: Params) => {
         // movie_list에서 movie_id 목록 가져오기
         const { data: movieDetailData, error: movieDetailError } = await supabase
             .from('movies')
-            .select('*')
+            .select('id: movie_id, title, original_title, poster_path')
             .in(
                 'movie_id',
                 movieListData.map((movie: { movie_id: string }) => movie.movie_id)

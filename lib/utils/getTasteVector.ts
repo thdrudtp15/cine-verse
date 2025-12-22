@@ -1,74 +1,200 @@
+import type { MovieDetail } from '@/types/movieDetail';
+import { supabase } from '@/lib/utils/supabase';
+
 /**
  * 사용자 행동 기록 배열을 받아 통합된 취향 벡터(U)를 계산합니다.
  * @param {Array<Array<Object>>} allInteractions - 모든 상호작용 기록 (배열의 배열)
  * @returns {{vector: number[], dimensions: number, ...}} 계산된 벡터와 통계 정보
  */
 
-export const getTasteVector = (allInteractions: any[]) => {
+export const getTasteVector = (wishMovies: any[]) => {
     try {
-        // 모든 배열을 하나로 합치기
-        const flatInteractions = allInteractions.flat();
+        const validData = wishMovies.filter((movie) => movie.movie?.embedding_vector);
 
-        // 벡터가 있는 영화들만 필터링
-        const validMovies = flatInteractions.filter((item) => {
-            if (!item.movie || !item.movie.embedding_vector) {
-                return false;
-            }
-            return true;
-        });
-
-        if (validMovies.length === 0) {
+        if (validData.length === 0) {
             throw new Error('벡터가 있는 영화가 존재하지 않습니다.');
         }
 
-        // 첫 번째 영화의 벡터 파싱해서 차원 확인
-        const firstVector = JSON.parse(validMovies[0].movie.embedding_vector);
+        // 첫 번째 영화의 벡터로 차원 확인
+        const firstVector = JSON.parse(validData[0].movie.embedding_vector);
         const dimensions = firstVector.length;
+        let totalVector: number[] = new Array(dimensions).fill(0);
 
-        // 취향 벡터 초기화 (모든 값을 0으로)
-        const tasteVector = new Array(dimensions).fill(0);
-        let totalWeight = 0;
+        // 모든 영화 벡터의 평균 계산
+        validData.forEach((movie) => {
+            const vector = JSON.parse(movie.movie.embedding_vector);
 
-        // 각 영화의 벡터에 가중치를 곱해서 더하기
-        validMovies.forEach((item) => {
-            let vector;
-
-            // embedding_vector가 문자열인 경우와 배열인 경우 모두 처리
-            if (typeof item.movie.embedding_vector === 'string') {
-                vector = JSON.parse(item.movie.embedding_vector);
-            } else {
-                vector = item.movie.embedding_vector;
-            }
-
-            const weight = Number(item.weight) || 1.0;
-
-            for (let i = 0; i < dimensions; i++) {
-                tasteVector[i] += vector[i] * weight;
-            }
-
-            totalWeight += weight;
+            vector.forEach((v: number, index: number) => {
+                totalVector[index] += v;
+            });
         });
 
-        // 평균 내기 (총 가중치로 나누기)
-        for (let i = 0; i < dimensions; i++) {
-            tasteVector[i] = tasteVector[i] / totalWeight;
+        // 평균 계산
+        totalVector = totalVector.map((v: number) => v / validData.length);
+
+        // L2 정규화 적용 (벡터의 방향성만 고려)
+        const norm = Math.sqrt(totalVector.reduce((sum, v) => sum + v * v, 0));
+
+        if (norm > 0) {
+            totalVector = totalVector.map((v) => v / norm);
         }
 
-        return {
-            vector: JSON.stringify(tasteVector),
-            dimensions,
-            moviesUsed: validMovies.length,
-            totalMovies: flatInteractions.length,
-            totalWeight,
-            movies: validMovies.map((m) => ({
-                title: m.movie.title,
-                weight: m.weight,
-                type: m.interaction_type,
-            })),
-        };
-    } catch (err) {
-        throw new Error(`계산 중 오류: ${err instanceof Error ? err.message : '알 수 없는 오류'}`);
+        // JSON 문자열로 변환하여 반환
+        return JSON.stringify(totalVector);
+    } catch (error) {
+        throw new Error(`계산 중 오류: ${error instanceof Error ? error.message : '알 수 없는 오류'}`);
     }
+
+    // try {
+    //     // 모든 배열을 하나로 합치기
+    //     const flatInteractions = allInteractions.flat();
+
+    //     // 벡터가 있는 영화들만 필터링
+    //     const validMovies = flatInteractions.filter((item) => {
+    //         if (!item.movie || !item.movie.embedding_vector) {
+    //             return false;
+    //         }
+    //         return true;
+    //     });
+
+    //     if (validMovies.length === 0) {
+    //         throw new Error('벡터가 있는 영화가 존재하지 않습니다.');
+    //     }
+
+    //     // 첫 번째 영화의 벡터 파싱해서 차원 확인
+    //     const firstVector = JSON.parse(validMovies[0].movie.embedding_vector);
+    //     const dimensions = firstVector.length;
+
+    //     // movie_id별로 그룹화하여 중복 제거 및 가중치 합산
+    //     const movieMap = new Map<
+    //         number,
+    //         { movie: MovieDetail & { embedding_vector: string }; totalWeight: number; interactions: string[] }
+    //     >();
+
+    //     validMovies.forEach((item) => {
+    //         const movieId = item.movie_id;
+    //         const weight = Number(item.weight) || 0.5;
+
+    //         if (movieMap.has(movieId)) {
+    //             // 이미 존재하는 영화면 가중치만 합산
+    //             const existing = movieMap.get(movieId)!;
+    //             existing.totalWeight += weight;
+    //             if (!existing.interactions.includes(item.interaction_type)) {
+    //                 existing.interactions.push(item.interaction_type);
+    //             }
+    //         } else {
+    //             // 새로운 영화면 추가
+    //             movieMap.set(movieId, {
+    //                 movie: item.movie,
+    //                 totalWeight: weight,
+    //                 interactions: [item.interaction_type],
+    //             });
+    //         }
+    //     });
+
+    //     console.log(movieMap, '유효한 영화');
+
+    //     // 다양성을 위한 가중치 조정: 유사한 영화들이 많으면 가중치를 줄임
+    //     const movieArray = Array.from(movieMap.entries());
+    //     const adjustedWeights = new Map<number, number>();
+
+    //     // 각 영화의 벡터를 미리 파싱
+    //     const movieVectors = new Map<number, number[]>();
+    //     movieArray.forEach(([movieId, { movie }]) => {
+    //         let vector;
+    //         if (typeof movie.embedding_vector === 'string') {
+    //             vector = JSON.parse(movie.embedding_vector);
+    //         } else {
+    //             vector = movie.embedding_vector;
+    //         }
+    //         movieVectors.set(movieId, vector);
+    //     });
+
+    //     // 각 영화에 대해 유사도 기반 가중치 조정
+    //     movieArray.forEach(([movieId, { totalWeight: originalWeight }]) => {
+    //         const currentVector = movieVectors.get(movieId)!;
+
+    //         // 현재 영화와 유사한 영화들의 수 계산 (코사인 유사도 > 0.7)
+    //         let similarCount = 0;
+    //         movieArray.forEach(([otherId, _]) => {
+    //             if (movieId === otherId) return;
+
+    //             const otherVector = movieVectors.get(otherId)!;
+
+    //             // 코사인 유사도 계산
+    //             let dotProduct = 0;
+    //             let normA = 0;
+    //             let normB = 0;
+
+    //             for (let i = 0; i < dimensions; i++) {
+    //                 dotProduct += currentVector[i] * otherVector[i];
+    //                 normA += currentVector[i] * currentVector[i];
+    //                 normB += otherVector[i] * otherVector[i];
+    //             }
+
+    //             const similarity = dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
+
+    //             if (similarity > 0.7) {
+    //                 similarCount++;
+    //             }
+    //         });
+
+    //         // 유사한 영화가 많을수록 가중치 감소 (다양성 보너스)
+    //         // 유사한 영화가 3개 이상이면 가중치를 50% 감소
+    //         const diversityFactor = similarCount >= 3 ? 0.5 : similarCount >= 2 ? 0.7 : 1.0;
+    //         const adjustedWeight = originalWeight * diversityFactor;
+
+    //         adjustedWeights.set(movieId, adjustedWeight);
+    //     });
+
+    //     // 취향 벡터 초기화 (모든 값을 0으로)
+    //     const tasteVector = new Array(dimensions).fill(0);
+    //     let totalWeight = 0;
+
+    //     // 각 영화를 한 번만 계산 (조정된 가중치 사용)
+    //     movieArray.forEach(([movieId, { movie }]) => {
+    //         const vector = movieVectors.get(movieId)!;
+    //         const adjustedWeight = adjustedWeights.get(movieId)!;
+
+    //         for (let i = 0; i < dimensions; i++) {
+    //             tasteVector[i] += vector[i] * adjustedWeight;
+    //         }
+
+    //         totalWeight += adjustedWeight;
+    //     });
+
+    //     // 평균 내기 (총 가중치로 나누기)
+    //     for (let i = 0; i < dimensions; i++) {
+    //         tasteVector[i] = tasteVector[i] / totalWeight;
+    //     }
+
+    //     // L2 정규화 적용 (벡터의 방향성만 고려하여 유사도 비교 시 각도만 고려)
+    //     // 이렇게 하면 유사한 영화들이 많아도 벡터의 방향성만 반영되어 더 정확한 추천 가능
+    //     const norm = Math.sqrt(tasteVector.reduce((sum, v) => sum + v * v, 0));
+
+    //     if (norm > 0) {
+    //         for (let i = 0; i < dimensions; i++) {
+    //             tasteVector[i] = tasteVector[i] / norm;
+    //         }
+    //     }
+
+    //     return {
+    //         vector: JSON.stringify(tasteVector),
+    //         dimensions,
+    //         moviesUsed: movieMap.size,
+    //         totalMovies: flatInteractions.length,
+    //         totalWeight,
+    //         movies: Array.from(movieMap.entries()).map(
+    //             ([movieId, { movie, totalWeight: movieWeight, interactions }]) => ({
+    //                 title: movie.title,
+    //                 weight: movieWeight,
+    //                 types: interactions,
+    //             })
+    //         ),
+    //     };
+    // } catch (err) {
+    //     throw new Error(`계산 중 오류: ${err instanceof Error ? err.message : '알 수 없는 오류'}`);
+    // }
 };
 
 // export const getTasteVector = (allInteractions: any[]) => {
