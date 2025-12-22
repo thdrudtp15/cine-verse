@@ -10,6 +10,7 @@ import type { MovieListItem } from '@/types/movieList';
 import { useQuery } from '@tanstack/react-query';
 
 import type { RecommendationsHistory } from '@/types/database';
+import { SERVER_URL } from '@/constants/constans';
 
 interface RecommendationItemProps {
     data: RecommendationsHistory;
@@ -25,7 +26,7 @@ const RecommendationItem = ({ data }: RecommendationItemProps) => {
     } = useQuery({
         queryKey: ['recommendation', data.id],
         queryFn: async () => {
-            const res = await fetch(`/api/recommendation/${data.id}`, { method: 'GET' });
+            const res = await fetch(`${SERVER_URL}/api/recommendation/${data.id}`, { method: 'GET' });
             if (!res.ok) {
                 throw new Error('추천 데이터를 가져오는데 실패했습니다');
             }

@@ -4,6 +4,8 @@ import { Heart, LoaderCircle } from 'lucide-react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { MovieDetail } from '@/types/movieDetail';
 
+import { SERVER_URL } from '@/constants/constans';
+
 type Props = {
     movie: MovieDetail;
 };
@@ -21,7 +23,7 @@ const Wish = ({ movie }: Props) => {
     const { data, isError, isLoading } = useQuery({
         queryKey: ['wish', movie.id],
         queryFn: async () => {
-            const response = await fetch(`/api/wish/${movie.id}`, {
+            const response = await fetch(`${SERVER_URL}/api/wish/${movie.id}`, {
                 method: 'GET',
             });
             if (!response.ok) {
@@ -41,7 +43,7 @@ const Wish = ({ movie }: Props) => {
     const { mutate: toggleWish, isPending } = useMutation({
         mutationFn: async () => {
             queryClient.setQueryData(['wish', movie.id], { isWished: !data?.isWished });
-            const response = await fetch(`/api/wish/${movie.id}`, {
+            const response = await fetch(`${SERVER_URL}/api/wish/${movie.id}`, {
                 method: 'POST',
                 body: JSON.stringify(movie),
                 headers: {

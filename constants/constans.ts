@@ -35,3 +35,6 @@ export const INTERACTION_WEIGHTS = {
     video: 1.0, // 예고편 - 관심
     visit: 0.5, // 방문 - 약한 신호
 } as const;
+
+export const SERVER_URL =
+    process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_SERVER_URL : 'http://localhost:3000';
