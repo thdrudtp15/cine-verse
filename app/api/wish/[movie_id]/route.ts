@@ -1,0 +1,90 @@
+'use server';
+import { NextResponse } from 'next/server';
+import { supabase } from '@/lib/utils/supabase';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import { movieUpsert } from '@/lib/actions/movieUpsert';
+import { revalidateTag } from 'next/cache';
+import { movieWish } from '@/lib/actions/movieWish';
+
+/**
+ * 찜하기 상태 조회 API
+ * GET /api/wish/[movie_id]
+ */
+export const GET = async (request: Request, { params }: { params: Promise<{ movie_id: string }> }) => {
+    try {
+        const session = await getServerSession(authOptions);
+
+        if (!session?.user?.id) {
+            return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+        }
+
+        const { movie_id } = await params;
+
+        const { data, error } = await supabase
+            .from('interactions_wishes')
+            .select('*')
+            .eq('movie_id', movie_id)
+            .eq('user_id', session.user.id)
+            .single();
+
+        if (error) {
+            // 레코드가 없는 경우는 에러가 아닙니다 (아직 찜하지 않음)
+            if (error.code === 'PGRST116') {
+                return NextResponse.json({ isWished: false, data: null });
+            }
+            console.error('찜하기 상태 조회 실패:', error);
+            return NextResponse.json({ message: error.message }, { status: 500 });
+        }
+
+        return NextResponse.json({ isWished: true });
+    } catch (error) {
+        console.error('찜하기 상태 조회 중 오류:', error);
+        return NextResponse.json(
+            { message: error instanceof Error ? error.message : '알 수 없는 오류' },
+            { status: 500 }
+        );
+    }
+};
+
+/**
+ * 찜하기 추가/제거 API
+ * POST /api/wish/[movie_id]
+ */
+export const POST = async (request: Request, { params }: { params: Promise<{ movie_id: string }> }) => {
+    try {
+        const session = await getServerSession(authOptions);
+
+        if (!session?.user?.id) {
+            return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+        }
+
+        const { movie_id } = await params;
+        const movie = await request.json();
+        movie.id = movie_id;
+
+        const { error: movieUpsertError } = await movieUpsert(movie);
+
+        if (movieUpsertError) {
+            console.log(movieUpsertError, '영화 정보 저장 실패');
+            return NextResponse.json({ message: movieUpsertError.message }, { status: 500 });
+        }
+
+        const isWished = await movieWish(movie, session.user.id);
+        revalidateTag('wishlist_movies', { expire: 0 });
+        revalidateTag('user_stats_count', { expire: 0 });
+        if (isWished) {
+            return NextResponse.json({ message: '찜하기가 추가되었습니다' }, { status: 200 });
+        } else {
+            return NextResponse.json({ message: '찜하기가 제거되었습니다' }, { status: 200 });
+        }
+
+        // 캐시 즉시 무효화
+    } catch (error) {
+        console.error('찜하기 처리 중 오류:', error);
+        return NextResponse.json(
+            { message: error instanceof Error ? error.message : '알 수 없는 오류' },
+            { status: 500 }
+        );
+    }
+};

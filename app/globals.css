@@ -1,26 +1,180 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+    /* Railway 스타일 컬러 시스템 */
+
+    /* 배경 컬러 */
+    --background: #0a0a0a;
+    --background-secondary: #0d0d0d;
+    --background-tertiary: #141414;
+    --background-elevated: #1a1a1a;
+
+    /* 텍스트 컬러 */
+    --foreground: #ededed;
+    --foreground-secondary: #a3a3a3;
+    --foreground-muted: #737373;
+
+    /* 액센트 컬러 (보라색 계열) */
+    --accent-primary: #8b5cf6;
+    --accent-primary-hover: #a855f7;
+    --accent-primary-light: #c084fc;
+    --accent-primary-dark: #7c3aed;
+
+    /* 보조 액센트 */
+    --accent-secondary: #6366f1;
+    --accent-secondary-hover: #818cf8;
+
+    /* 상태 컬러 */
+    --success: #10b981;
+    --warning: #f59e0b;
+    --error: #ef4444;
+    --info: #3b82f6;
+
+    /* 테두리 및 구분선 */
+    --border: rgba(255, 255, 255, 0.1);
+    --border-hover: rgba(255, 255, 255, 0.2);
+    --divider: rgba(255, 255, 255, 0.05);
+
+    /* 글래스모피즘 효과용 */
+    --glass-bg: rgba(26, 26, 26, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-shadow: rgba(0, 0, 0, 0.3);
+
+    /* 그라데이션 */
+    --gradient-primary: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+    --gradient-secondary: linear-gradient(135deg, #a855f7 0%, #8b5cf6 100%);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+    --color-background: var(--background);
+    --color-background-secondary: var(--background-secondary);
+    --color-background-tertiary: var(--background-tertiary);
+    --color-background-elevated: var(--background-elevated);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+    --color-foreground: var(--foreground);
+    --color-foreground-secondary: var(--foreground-secondary);
+    --color-foreground-muted: var(--foreground-muted);
+
+    --color-accent-primary: var(--accent-primary);
+    --color-accent-primary-hover: var(--accent-primary-hover);
+    --color-accent-primary-light: var(--accent-primary-light);
+    --color-accent-primary-dark: var(--accent-primary-dark);
+
+    --color-accent-secondary: var(--accent-secondary);
+    --color-accent-secondary-hover: var(--accent-secondary-hover);
+
+    --color-success: var(--success);
+    --color-warning: var(--warning);
+    --color-error: var(--error);
+    --color-info: var(--info);
+
+    --color-border: var(--border);
+    --color-border-hover: var(--border-hover);
+    --color-divider: var(--divider);
+
+    --color-glass-bg: var(--glass-bg);
+    --color-glass-border: var(--glass-border);
+    --color-glass-shadow: var(--glass-shadow);
+
+    --font-sans: var(--font-geist-sans);
+    --font-mono: var(--font-geist-mono);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: Arial, Helvetica, sans-serif;
+    padding-top: 4rem;
+}
+
+/* 스크롤바 스타일 */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--background-elevated) transparent;
+}
+
+*::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+*::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: --background-elevated;
+    border-radius: 4px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+/* 
+*::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(139, 92, 246, 0.5);
+} */
+
+@layer components {
+    .content-container {
+        @apply max-w-7xl mx-auto px-4 w-full;
+    }
+    .skeleton {
+        @apply bg-gray-600/40 rounded-full w-full h-full;
+    }
+    /* bg-gradient-to-br from-purple-500/10 via-blue-500/10 to-indigo-500/10 animate-pulse */
+}
+
+/* RangeSlider Railway 스타일 */
+.rated-slider {
+    --range-slider-track-height: 6px;
+    --range-slider-thumb-size: 18px;
+}
+
+.rated-slider .range-slider__range {
+    background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+    border-radius: 3px;
+}
+
+.rated-slider .range-slider__track {
+    background: var(--background-tertiary);
+    border-radius: 3px;
+}
+
+.rated-slider .range-slider__thumb {
+    background: var(--accent-primary);
+    border: 2px solid var(--background);
+    box-shadow: 0 2px 8px rgba(139, 92, 246, 0.4);
+    transition: all 0.2s ease;
+    cursor: grab;
+}
+
+.rated-slider .range-slider__thumb:active {
+    cursor: grabbing;
+    background: var(--accent-primary-dark);
+    box-shadow: 0 2px 8px rgba(139, 92, 246, 0.8);
+}
+
+.rated-slider .range-slider__thumb:hover {
+    background: var(--accent-primary-hover);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.6);
+    transform: scale(1.1);
+}
+
+/* 커스텀 스크롤바 */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(139, 92, 246, 0.3);
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(139, 92, 246, 0.5);
 }
