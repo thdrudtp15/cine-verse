@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from 'react';
 import type { VideoResult } from '@/types/movieVideos';
 import type { YT } from '@/types/youtube';
 import type { MovieDetail } from '@/types/movieDetail';
+import { SERVER_URL } from '@/constants/constans';
 
 interface VideoModalProps {
     video: VideoResult | null;
@@ -25,7 +26,7 @@ const VideoModal = ({ video, movie, onClose }: VideoModalProps) => {
         const progress = getProgress();
         if (progress < 50 || currentTimeRef.current === 0) return;
 
-        const response = await fetch('/api/interactions/videos', {
+        const response = await fetch(`${SERVER_URL}/api/interactions/videos`, {
             method: 'POST',
             body: JSON.stringify({
                 movie: movie,

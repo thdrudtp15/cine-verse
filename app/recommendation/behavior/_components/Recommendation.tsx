@@ -4,11 +4,12 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import ErrorModal from '@/components/modal/ErrorModal';
 import RecommendationModal from '@/components/modal/RecommendationModal';
 import { useEffect } from 'react';
+import { SERVER_URL } from '@/constants/constans';
 /**
  * 추천 API 호출 함수
  */
 const getRecommendation = async (tasteMovies: TasteMovies[]) => {
-    const response = await fetch('/api/recommendation/behavior', {
+    const response = await fetch(`${SERVER_URL}/api/recommendation/behavior`, {
         method: 'POST',
         body: JSON.stringify(tasteMovies),
         headers: {

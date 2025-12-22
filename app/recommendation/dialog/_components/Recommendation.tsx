@@ -4,14 +4,15 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import ErrorModal from '@/components/modal/ErrorModal';
 import RecommendationModal from '@/components/modal/RecommendationModal';
 import { useEffect, useState } from 'react';
+import { SERVER_URL } from '@/constants/constans';
 
 /**
  * 추천 API 호출 함수
  */
 const getRecommendation = async (input: string) => {
-    const response = await fetch('/api/recommendation/dialog', {
+    const response = await fetch(`${SERVER_URL}/api/recommendation/dialog`, {
         method: 'POST',
-        body: JSON.stringify({input}), // 빈 배열을 보내면 인기 영화 추천
+        body: JSON.stringify({ input }), // 빈 배열을 보내면 인기 영화 추천
         headers: {
             'Content-Type': 'application/json',
         },
@@ -62,9 +63,9 @@ const Recommendation = () => {
                 errorMessage={errorMessage}
             />
             {/* 추천 받기 버튼 */}
-           
-             {/* 추천 받기 섹션 */}
-             <div className="flex flex-col gap-4">
+
+            {/* 추천 받기 섹션 */}
+            <div className="flex flex-col gap-4">
                 <div className="space-y-2">
                     <label htmlFor="recommendation-input" className="text-sm font-medium text-foreground mb-2">
                         원하는 영화의 특징을 입력해주세요
@@ -81,7 +82,7 @@ const Recommendation = () => {
                         원하는 장르, 분위기, 테마 등을 자유롭게 입력하세요. 입력하지 않으면 인기 영화를 추천합니다.
                     </p>
                 </div>
-                
+
                 <button
                     onClick={() => refetch()}
                     disabled={isLoading}
