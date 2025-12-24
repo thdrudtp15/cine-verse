@@ -5,6 +5,7 @@ import getRuntime from '@/lib/utils/getRuntime';
 
 import type { MovieDetail } from '@/types/movieDetail';
 import type { WatchProviders } from '@/types/watchProviders';
+import type { Session } from 'next-auth';
 
 import ExistImage from '@/components/ui/ExistImage';
 import NotExistImage from '@/components/ui/NotExistImage';
@@ -14,9 +15,10 @@ import ProviderItem from './ProviderItem';
 type Props = {
     data: Promise<MovieDetail>;
     watchProviders: Promise<WatchProviders>;
+    session: Session | null;
 };
 
-const Overview = ({ data, watchProviders }: Props) => {
+const Overview = ({ data, watchProviders, session }: Props) => {
     const movie = use(data);
     const watchProvidersData = use(watchProviders);
     const { data: watchProvidersDataList, link } = watchProvidersData;
@@ -48,7 +50,7 @@ const Overview = ({ data, watchProviders }: Props) => {
                         />
                     )}
                     {!posterUrl && <NotExistImage />}
-                    <Wish movie={movie} />
+                    <Wish movie={movie} session={session} />
                 </div>
                 <div className="flex-1 flex flex-col gap-4">
                     <div className="flex gap-2 flex-wrap items-center">

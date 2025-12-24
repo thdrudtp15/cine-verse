@@ -2,14 +2,17 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import bannerImage from '@/public/banner.webp';
+
 const Banner = React.memo(() => {
     return (
         <div className="relative w-full h-[85vh] min-h-[700px] overflow-hidden">
             {/* 배경 이미지 */}
             <div className="absolute inset-0">
                 <Image
-                    src={`https://image.tmdb.org/t/p/original/s3TBrRGB1iav7gFOCNx3H31MoES.jpg`}
-                    alt={'Inception'}
+                    src={bannerImage}
+                    alt={'banner'}
+                    placeholder="blur"
                     fill
                     priority
                     className="object-cover object-center"

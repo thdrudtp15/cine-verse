@@ -28,7 +28,7 @@ const getPopularContent = unstable_cache(
     ['popular-content'],
     {
         tags: ['popular-content'],
-        revalidate: 3600, // 1시간마다 재검증 (초 단위)
+        revalidate: 60 * 60 * 24,
     }
 );
 
@@ -44,7 +44,7 @@ const getTopRatedContent = unstable_cache(
     ['top-rated-content'],
     {
         tags: ['top-rated-content'],
-        revalidate: 3600, // 1시간마다 재검증 (초 단위)
+        revalidate: 60 * 60 * 24,
     }
 );
 

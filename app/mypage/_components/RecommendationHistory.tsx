@@ -2,16 +2,32 @@ import React from 'react';
 import { supabase } from '@/lib/utils/supabase';
 import { unstable_cache } from 'next/cache';
 import RecommendationItem from './RecommendationItem';
+import Pagination from '@/components/ui/Pagination';
 
-const getRecommendationHistory = async () =>
-    await supabase.from('recommendations_history').select('*').order('created_at', { ascending: false });
+const ITEM_PER_PAGE = 6;
 
-const RecommendationHistory = async () => {
-    const { data, error } = await getRecommendationHistory();
+const getRecommendationHistory = unstable_cache(
+    async (page: number) => {
+        const { data, error, count } = await supabase
+            .from('recommendations_history')
+            .select('*', { count: 'exact' })
+            .order('created_at', { ascending: false })
+            .range((page - 1) * ITEM_PER_PAGE, page * ITEM_PER_PAGE - 1);
 
-    if (error) {
-        return <div>Error: {error.message}</div>;
-    }
+        if (error) {
+            return { data: [], count: 0 };
+        }
+
+        return { data, count: count };
+    },
+    ['recommendation_history'],
+    { tags: ['recommendation_history'], revalidate: 60 * 60 * 24 }
+);
+
+const RecommendationHistory = async ({ page }: { page: number }) => {
+    const { data, count } = await getRecommendationHistory(page);
+
+    const totalPages = Math.ceil((count || 0) / ITEM_PER_PAGE);
 
     if (!data || data.length === 0) {
         return (
@@ -42,6 +58,7 @@ const RecommendationHistory = async () => {
             {data.map((item) => (
                 <RecommendationItem key={item.id} data={item} />
             ))}
+            <Pagination totalPages={totalPages} currentPage={page} />
         </div>
     );
 };
