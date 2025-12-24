@@ -3,15 +3,10 @@ import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
 import Overview from './_components/Overview';
-import OverviewSkeleton from './_components/OverviewSkeleton';
 import Credits from './_components/Credits';
-import CreditsSkeleton from './_components/CreditsSkeleton';
 import Videos from './_components/Videos';
-import VideosSkeleton from './_components/VideosSkeleton';
 import SideBar from './_components/SideBar';
-import SideBarSkeleton from './_components/SideBarSkeleton';
 import Recommendation from './_components/Recommendation';
-import RecommendationSkeleton from './_components/RecommendationSkeleton';
 import Duration from './_components/Duration';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
@@ -110,7 +105,7 @@ const Page = async ({ params }: { params: Promise<{ slug: string }> }) => {
     return (
         <div className="flex flex-col gap-4">
             <Duration movie={movie} session={session} />
-            <Overview data={movie} watchProviders={watchProviders} />
+            <Overview data={movie} watchProviders={watchProviders} session={session} />
             <div className="content-container">
                 <div className="border-t border-(--border) pt-4"></div>
                 <div className="flex gap-4 md:flex-row flex-col">

@@ -2,12 +2,16 @@
 import React from 'react';
 import { Heart, LoaderCircle } from 'lucide-react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+
 import type { MovieDetail } from '@/types/movieDetail';
+import type { Session } from 'next-auth';
 
 import { SERVER_URL } from '@/constants/constans';
 
 type Props = {
     movie: MovieDetail;
+    session: Session | null;
 };
 
 /**
@@ -16,7 +20,9 @@ type Props = {
  * 포스터 이미지 위에 표시되는 찜하기 버튼입니다.
  * 클릭 시 찜하기 상태를 토글합니다.
  */
-const Wish = ({ movie }: Props) => {
+const Wish = ({ movie, session }: Props) => {
+    const router = useRouter();
+
     const queryClient = useQueryClient();
 
     // 찜하기 상태 조회
@@ -37,6 +43,7 @@ const Wish = ({ movie }: Props) => {
             }
             return failureCount < 4;
         },
+        enabled: !!session?.user?.name,
     });
 
     // 찜하기 토글 mutation
@@ -67,7 +74,13 @@ const Wish = ({ movie }: Props) => {
 
     return (
         <button
-            onClick={() => toggleWish()}
+            onClick={() => {
+                if (!session?.user?.name) {
+                    router.push('/login');
+                    return;
+                }
+                toggleWish();
+            }}
             disabled={isDisabled}
             className={`absolute top-3 right-3 w-10 h-10 rounded-full bg-background/80 backdrop-blur-md  transition-all duration-200 hover:scale-110 shadow-lg flex items-center justify-center ${
                 isWished ? '' : 'border-border hover:bg-background-elevated'

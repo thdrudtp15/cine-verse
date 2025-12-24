@@ -6,8 +6,12 @@ import { unstable_cache } from 'next/cache';
 import Image from 'next/image';
 import { User, Heart, Clock, Play, ExternalLink, Sparkles } from 'lucide-react';
 import Link from 'next/link';
-import type { MovieListItem } from '@/types/movieList';
+
 import MyPageTabs from '../_components/MyPageTabs';
+import WishList from '../_components/WishList';
+import Stats from '../_components/Stats';
+import RecommendationHistory from '../_components/RecommendationHistory';
+
 import { notFound } from 'next/navigation';
 
 const getUserStatsCount = unstable_cache(
@@ -46,8 +50,15 @@ const getUserStatsCount = unstable_cache(
     { tags: ['user_stats_count'], revalidate: 60 * 60 * 24 }
 );
 
-const MyPage = async ({ params }: { params: Promise<{ tab: string }> }) => {
+const MyPage = async ({
+    params,
+    searchParams,
+}: {
+    params: Promise<{ tab: string }>;
+    searchParams: Promise<{ page: string; recommendation_page: string }>;
+}) => {
     const { tab } = await params;
+    const { page } = await searchParams;
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
         redirect('/login');
@@ -168,7 +179,11 @@ const MyPage = async ({ params }: { params: Promise<{ tab: string }> }) => {
                 </div> */}
 
                 {/* 탭 기반 콘텐츠 */}
-                <MyPageTabs statsCount={statsCount} userId={session.user.id} activeTab={tab} />
+                <MyPageTabs statsCount={statsCount} userId={session.user.id} activeTab={tab} page={+page}>
+                    {tab === 'wishlist' && <WishList userId={session.user.id} page={+page || 1} />}
+                    {tab === 'stats' && <Stats statsCount={statsCount} />}
+                    {tab === 'recommendation' && <RecommendationHistory page={+page || 1} />}
+                </MyPageTabs>
             </div>
         </div>
     );

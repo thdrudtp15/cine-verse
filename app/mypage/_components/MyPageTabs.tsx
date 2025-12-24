@@ -1,11 +1,5 @@
-import { Heart, Clock, BarChart3, Film, Sparkles } from 'lucide-react';
+import { Heart, BarChart3, Sparkles } from 'lucide-react';
 import Link from 'next/link';
-import type { MovieListItem } from '@/types/movieList';
-import Overview from './Overview';
-import WishList from './WishList';
-import History from './History';
-import Stats from './Stats';
-import RecommendationHistory from './RecommendationHistory';
 
 type TabType = 'overview' | 'wishlist' | 'history' | 'stats' | 'recommendation';
 
@@ -20,9 +14,11 @@ interface MyPageTabsProps {
     };
     userId: string;
     activeTab: string;
+    page: number;
+    children: React.ReactNode;
 }
 
-const MyPageTabs = ({ statsCount, userId, activeTab }: MyPageTabsProps) => {
+const MyPageTabs = ({ statsCount, activeTab, children }: MyPageTabsProps) => {
     const tabs = [
         // { id: 'overview' as TabType, label: '개요', icon: Film },
         { id: 'wishlist' as TabType, label: '위시리스트', icon: Heart, count: statsCount.wishes },
@@ -76,20 +72,7 @@ const MyPageTabs = ({ statsCount, userId, activeTab }: MyPageTabsProps) => {
             </div>
 
             {/* 탭 콘텐츠 */}
-            <div className="p-6 md:p-8">
-                {/* {activeTab === 'overview' && (
-                    <Overview
-                        wishlistMovies={wishlistMovies}
-                        recentVisits={recentVisits}
-                        onNavigateToWishlist={() => setActiveTab('wishlist')}
-                        onNavigateToHistory={() => setActiveTab('history')}
-                    />
-                )} */}
-                {activeTab === 'wishlist' && <WishList userId={userId} />}
-                {/* {activeTab === 'history' && <History recentVisits={recentVisits} />} */}
-                {activeTab === 'stats' && <Stats statsCount={statsCount} />}
-                {activeTab === 'recommendation' && <RecommendationHistory />}
-            </div>
+            <div className="p-6 md:p-8">{children}</div>
         </div>
     );
 };
