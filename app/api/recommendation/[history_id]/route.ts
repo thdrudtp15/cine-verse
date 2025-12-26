@@ -39,9 +39,9 @@ export const GET = async (request: Request, { params }: Params) => {
         }
 
         if (!movieListData || movieListData.length === 0) {
-            return NextResponse.json({ 
+            return NextResponse.json({
                 movies: [],
-                prompt: historyData.prompt || null 
+                prompt: historyData.prompt || null,
             });
         }
 
@@ -59,9 +59,9 @@ export const GET = async (request: Request, { params }: Params) => {
         }
 
         if (!movieDetailData || movieDetailData.length === 0) {
-            return NextResponse.json({ 
+            return NextResponse.json({
                 movies: [],
-                prompt: historyData.prompt || null 
+                prompt: historyData.prompt || null,
             });
         }
 
@@ -93,9 +93,9 @@ export const GET = async (request: Request, { params }: Params) => {
         //     }
         // }
 
-        return NextResponse.json({ 
+        return NextResponse.json({
             movies: movieDetailData,
-            prompt: historyData.prompt || null 
+            prompt: historyData.prompt || null,
         });
     } catch (error) {
         console.error('API 에러:', error);
