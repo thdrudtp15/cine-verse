@@ -67,7 +67,8 @@ const Recommendation = ({ tasteMovies }: { tasteMovies: TasteMovies[] }) => {
                 onClose={() => queryClient.resetQueries({ queryKey: ['recommendation'] })}
                 errorMessage={errorMessage}
             />
-            <LoadingModal isOpen={true} message="영화를 추천하고 있습니다..." />
+
+            <LoadingModal isOpen={isLoading} message="영화를 추천하고 있습니다..." />
             {/* 추천 받기 버튼 */}
             <div className="flex flex-col gap-4">
                 <button
