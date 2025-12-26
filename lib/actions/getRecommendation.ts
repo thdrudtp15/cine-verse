@@ -84,13 +84,18 @@ export const getRecommendationList = async (json: string) => {
 //===================
 // 영화 추천 내역 저장
 //===================
-export const saveRecommendationHistory = async (session: Session, recommendation_type: 'behavior' | 'dialog') => {
+export const saveRecommendationHistory = async (
+    session: Session,
+    recommendation_type: 'behavior' | 'dialog',
+    prompt?: string
+) => {
     try {
         const { data, error } = await supabase
             .from('recommendations_history')
             .insert({
                 user_id: session.user.id,
                 recommendation_type,
+                prompt: prompt || '',
             })
             .select('id')
             .single();
@@ -107,18 +112,15 @@ export const saveRecommendationHistory = async (session: Session, recommendation
 };
 
 //===================
-// 영화 데이터 저장 및 영화 추천 데이터 리스트 저장
+// 영화 데이터 저장
 //===================
-export const saveRecommendationList = async (recommendationHistoryId: string, recommendationList: MovieListItem[]) => {
+export const saveMovieListData = async (recommendationList: MovieListItem[]) => {
+    const getGenreData = (genre_ids: number[]) => {
+        return genre_ids.map((genre_id: number) => {
+            return GENRES.find((genre: { id: number }) => genre.id === genre_id);
+        });
+    };
     try {
-        // 영화 데이터 supabase DB에 저장
-
-        const getGenreData = (genre_ids: number[]) => {
-            return genre_ids.map((genre_id: number) => {
-                return GENRES.find((genre: { id: number }) => genre.id === genre_id);
-            });
-        };
-
         const saveRecommendationList = recommendationList.map((movie: MovieListItem) => ({
             title: movie.title,
             movie_id: movie.id,
@@ -128,22 +130,32 @@ export const saveRecommendationList = async (recommendationHistoryId: string, re
             genres: JSON.stringify(getGenreData(movie.genre_ids)),
         }));
 
+        const { error } = await supabase.from('movies').upsert(saveRecommendationList, { onConflict: 'movie_id' });
+
+        if (error) {
+            console.error(error);
+            throw new Error('영화 데이터 저장 실패: ' + error.message);
+        }
+    } catch (error) {
+        console.error(error);
+        throw new Error('영화 데이터 저장 실패: ' + error);
+    }
+};
+
+//===================
+// 영화 추천 데이터 리스트 저장
+//===================
+export const saveRecommendationList = async (recommendationHistoryId: string, recommendationList: MovieListItem[]) => {
+    try {
+        // 영화 데이터 supabase DB에 저장
+
         // 영화 추천 리스트 supabase DB에 저장
         const rows = recommendationList.map((movie: MovieListItem) => ({
             recommendations_history_id: recommendationHistoryId,
             movie_id: movie.id,
         }));
 
-        const { error: movieDataSaveError } = await supabase
-            .from('movies')
-            .upsert(saveRecommendationList, { onConflict: 'movie_id' });
-
         const { error: errorSaveRecommendationList } = await supabase.from('recommendations_movie_list').insert(rows);
-
-        if (movieDataSaveError) {
-            console.error(movieDataSaveError);
-            throw new Error('영화 데이터 저장 실패: ' + movieDataSaveError.message);
-        }
 
         if (errorSaveRecommendationList) {
             console.error(errorSaveRecommendationList);

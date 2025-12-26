@@ -39,7 +39,10 @@ export const GET = async (request: Request, { params }: Params) => {
         }
 
         if (!movieListData || movieListData.length === 0) {
-            return NextResponse.json({ movies: [] });
+            return NextResponse.json({ 
+                movies: [],
+                prompt: historyData.prompt || null 
+            });
         }
 
         // movie_list에서 movie_id 목록 가져오기
@@ -56,7 +59,10 @@ export const GET = async (request: Request, { params }: Params) => {
         }
 
         if (!movieDetailData || movieDetailData.length === 0) {
-            return NextResponse.json({ movies: [] });
+            return NextResponse.json({ 
+                movies: [],
+                prompt: historyData.prompt || null 
+            });
         }
 
         // // 각 movie_id로 TMDB API 호출하여 영화 정보 가져오기
@@ -87,7 +93,10 @@ export const GET = async (request: Request, { params }: Params) => {
         //     }
         // }
 
-        return NextResponse.json({ movies: movieDetailData });
+        return NextResponse.json({ 
+            movies: movieDetailData,
+            prompt: historyData.prompt || null 
+        });
     } catch (error) {
         console.error('API 에러:', error);
         return NextResponse.json(

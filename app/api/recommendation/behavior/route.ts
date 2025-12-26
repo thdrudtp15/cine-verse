@@ -6,6 +6,7 @@ import {
     getRecommendationList,
     saveRecommendationHistory,
     saveRecommendationList,
+    saveMovieListData,
 } from '@/lib/actions/getRecommendation';
 import { getImbedText } from '@/lib/utils/getImbedText';
 import { revalidateTag } from 'next/cache';
@@ -55,6 +56,7 @@ export const POST = async (request: Request) => {
     try {
         const recommendation = await getRecommendationByGemini(prompt);
         const recommendationList = await getRecommendationList(recommendation);
+        await saveMovieListData(recommendationList);
         const recommendationHistoryId = await saveRecommendationHistory(session, 'behavior');
         await saveRecommendationList(recommendationHistoryId, recommendationList);
 
