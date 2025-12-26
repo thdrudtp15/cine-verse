@@ -2,6 +2,7 @@
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import ErrorModal from '@/components/modal/ErrorModal';
+import LoadingModal from '@/components/modal/LoadingModal';
 import RecommendationModal from '@/components/modal/RecommendationModal';
 import { useEffect, useState } from 'react';
 import { SERVER_URL } from '@/constants/constans';
@@ -62,6 +63,7 @@ const Recommendation = () => {
                 onClose={() => queryClient.resetQueries({ queryKey: ['recommendation', 'simple'] })}
                 errorMessage={errorMessage}
             />
+            <LoadingModal isOpen={isLoading} message="영화를 추천하고 있습니다..." />
             {/* 추천 받기 버튼 */}
 
             {/* 추천 받기 섹션 */}

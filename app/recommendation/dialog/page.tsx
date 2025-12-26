@@ -1,15 +1,7 @@
-import { Brain, Zap } from 'lucide-react';
+import { Brain } from 'lucide-react';
 import Recommendation from './_components/Recommendation';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import { redirect } from 'next/navigation';
 
 const SimpleRecommendationPage = async () => {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-        return redirect('/login');
-    }
-
     return (
         <div className="content-container py-8">
             {/* 헤더 섹션 */}
@@ -20,9 +12,7 @@ const SimpleRecommendationPage = async () => {
                     </div>
                     <h1 className="text-4xl font-bold text-foreground">LLM 기반 영화 추천</h1>
                 </div>
-                <p className="text-foreground-secondary mt-2">
-                    Google Gemini AI를 활용하여 인기 영화를 추천합니다.
-                </p>
+                <p className="text-foreground-secondary mt-2">Google Gemini AI를 활용하여 인기 영화를 추천합니다.</p>
             </div>
 
             {/* LLM 추천 설명 섹션 */}

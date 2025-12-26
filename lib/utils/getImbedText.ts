@@ -6,12 +6,8 @@ export const getImbedText = (movie: Movies & { similarity?: number }) => {
         ? JSON.parse(movie.genres as string).map((genre: { id: string; name: string }) => genre.name)
         : [];
 
-    // 장르만 사용하여 임베딩 텍스트 생성
-    // 장르가 없으면 제목만 사용
-    if (genres.length === 0) {
-        return `Movie: ${movie.title}(${movie.original_title})`;
-    }
-
-    return `Movie: ${movie.title}(${movie.original_title})
-Genres: ${genres.join(', ')}`;
+    return `Title: ${movie.original_title}
+            Genres: ${genres.join(', ')}
+            Overview: ${movie.overview}
+            `;
 };

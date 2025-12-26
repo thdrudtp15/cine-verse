@@ -4,6 +4,7 @@ import {
     getRecommendationList,
     saveRecommendationHistory,
     saveRecommendationList,
+    saveMovieListData,
 } from '@/lib/actions/getRecommendation';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
@@ -43,22 +44,22 @@ const getPrompt = (input: string) => {
 export const POST = async (request: Request) => {
     const session = await getServerSession(authOptions);
 
-    if (!session) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
     const { input } = await request.json();
     const prompt = getPrompt(input);
 
     try {
         const recommendation = await getRecommendationByGemini(prompt);
         const recommendationList = await getRecommendationList(recommendation);
-        const recommendationHistoryId = await saveRecommendationHistory(session, 'dialog');
-        await saveRecommendationList(recommendationHistoryId, recommendationList);
+        await saveMovieListData(recommendationList);
 
-        revalidateTag('recommendation_history', { expire: 0 });
-        revalidateTag('recommendation_list', { expire: 0 });
-        revalidateTag('user_stats_count', { expire: 0 });
+        if (session) {
+            const recommendationHistoryId = await saveRecommendationHistory(session, 'dialog', input);
+            await saveRecommendationList(recommendationHistoryId, recommendationList);
+            revalidateTag('recommendation_history', { expire: 0 });
+            revalidateTag('recommendation_list', { expire: 0 });
+            revalidateTag('user_stats_count', { expire: 0 });
+        }
+
         return NextResponse.json(
             { message: '영화 추천 및 내역, 리스트 저장 성공', recommendationList },
             { status: 200 }

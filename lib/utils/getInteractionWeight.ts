@@ -24,8 +24,20 @@ type InteractionVideosWithMovies = InteractionsVideos & {
     movie: Movies;
 };
 
+// 공통 베이스 타입 정의
+export type WeightedInteraction = {
+    weight: number;
+    imbed_text: string;
+    interaction_type: string;
+    created_at: string;
+    id: number;
+    movie_id: number | null;
+    user_id: string | null;
+    movie: Movies;
+};
+
 // 방문 가중치 계산
-export const getVisitsWeight = (data: InteractionVisitsWithMovies[]) => {
+export const getVisitsWeight = (data: InteractionVisitsWithMovies[]): WeightedInteraction[] => {
     const sortedData = data.sort((a, b) => {
         return (b.duration || 0) - (a.duration || 0);
     });
@@ -33,7 +45,7 @@ export const getVisitsWeight = (data: InteractionVisitsWithMovies[]) => {
         .map((item, index, { length }) => {
             return {
                 ...item,
-                weight: (INTERACTION_WEIGHTS.visit * (1 - index / length)).toFixed(4),
+                weight: Number((INTERACTION_WEIGHTS.visit * (1 - index / length)).toFixed(4)),
                 imbed_text: getImbedText(item.movie),
                 interaction_type: 'visit',
             };
@@ -44,11 +56,11 @@ export const getVisitsWeight = (data: InteractionVisitsWithMovies[]) => {
 };
 
 // 좋아요 가중치 계산
-export const getWishesWeight = (data: InteractionWishesWithMovies[]) => {
+export const getWishesWeight = (data: InteractionWishesWithMovies[]): WeightedInteraction[] => {
     return data.map((item: InteractionWishesWithMovies) => {
         return {
             ...item,
-            weight: INTERACTION_WEIGHTS.wish,
+            weight: Number(INTERACTION_WEIGHTS.wish),
             imbed_text: getImbedText(item.movie),
             interaction_type: 'wish',
         };
@@ -56,11 +68,11 @@ export const getWishesWeight = (data: InteractionWishesWithMovies[]) => {
 };
 
 // 스트리밍 이동 가중치 계산
-export const getProvidersWeight = (data: InteractionProvidersWithMovies[]) => {
-    return data.map((item: InteractionWishesWithMovies) => {
+export const getProvidersWeight = (data: InteractionProvidersWithMovies[]): WeightedInteraction[] => {
+    return data.map((item: InteractionProvidersWithMovies) => {
         return {
             ...item,
-            weight: INTERACTION_WEIGHTS.provider,
+            weight: Number(INTERACTION_WEIGHTS.provider),
             imbed_text: getImbedText(item.movie),
             interaction_type: 'provider',
         };
@@ -68,7 +80,7 @@ export const getProvidersWeight = (data: InteractionProvidersWithMovies[]) => {
 };
 
 // 예고편 가중치 계산
-export const getVideosWeight = (data: InteractionVideosWithMovies[]) => {
+export const getVideosWeight = (data: InteractionVideosWithMovies[]): WeightedInteraction[] => {
     const seen = new Set<number>();
     const uniqueData: InteractionVideosWithMovies[] = [];
 
@@ -82,9 +94,9 @@ export const getVideosWeight = (data: InteractionVideosWithMovies[]) => {
     return uniqueData.map((item: InteractionVideosWithMovies) => {
         return {
             ...item,
-            weight: INTERACTION_WEIGHTS.video,
+            weight: Number(INTERACTION_WEIGHTS.video),
             imbed_text: getImbedText(item.movie),
-            interaction_type: 'video' as const,
+            interaction_type: 'video',
         };
     });
 };

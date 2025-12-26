@@ -21,6 +21,6 @@ export const proxy = async (request: NextRequest) => {
 export const config = {
     matcher: [
         '/mypage/:path*', // /dashboard 하위 모든 경로
-        '/recommendation/:path*', // /profile 하위 모든 경로
+        '/recommendation/behavior', // /profile 하위 모든 경로
     ],
 };

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronDown, Brain, BarChart3 } from 'lucide-react';
+import { ChevronDown, Brain, BarChart3, PenLine } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { getDate } from '@/lib/utils/getDate';
 import Card from '@/components/content/Card';
@@ -36,8 +36,8 @@ const RecommendationItem = ({ data }: RecommendationItemProps) => {
     });
 
     const movies = recommendationData?.movies || [];
-    console.log(movies, '내가 기필코 한다.');
     const movieCount = movies.length;
+    const prompt = recommendationData?.prompt || data.prompt;
 
     return (
         <div className="border border-border rounded-lg bg-background-elevated overflow-hidden transition-all duration-200 hover:border-border-hover">
@@ -84,6 +84,23 @@ const RecommendationItem = ({ data }: RecommendationItemProps) => {
                         className="overflow-hidden"
                     >
                         <div className="p-4 pt-0 border-t border-divider">
+                            {/* 프롬프트 표시 (AI 대화 타입일 때만) */}
+                            {data.recommendation_type === 'dialog' && prompt && (
+                                <div className="mb-4 pt-4">
+                                    <div className="gap-3 p-3 rounded-lg bg-background-tertiary border border-border">
+                                        <div className="flex gap-2 items-center mb-4">
+                                            <div className="flex-shrink-0 p-1 rounded-full bg-accent-primary/20 flex items-center justify-center mt-0.5">
+                                                <PenLine className="w-2 h-2 text-accent-primary" strokeWidth={2} />
+                                            </div>
+                                            <p className="text-sm font-medium">입력한 프롬프트</p>
+                                        </div>
+                                        <p className="text-sm text-foreground leading-relaxed break-words text-foreground-secondary">
+                                            {prompt}
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
+
                             {isLoading ? (
                                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pt-4">
                                     <Skeleton />

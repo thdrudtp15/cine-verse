@@ -1,46 +1,38 @@
-import type { MovieDetail } from '@/types/movieDetail';
-import { supabase } from '@/lib/utils/supabase';
+import type { WeightedInteraction } from './getInteractionWeight';
 
-/**
- * 사용자 행동 기록 배열을 받아 통합된 취향 벡터(U)를 계산합니다.
- * @param {Array<Array<Object>>} allInteractions - 모든 상호작용 기록 (배열의 배열)
- * @returns {{vector: number[], dimensions: number, ...}} 계산된 벡터와 통계 정보
- */
+type wishMovies = WeightedInteraction;
 
-export const getTasteVector = (wishMovies: any[]) => {
+export const getTasteVector = (wishMovies: wishMovies[]) => {
     try {
-        const validData = wishMovies.filter((movie) => movie.movie?.embedding_vector);
+        // 모든 상호작용 영화 배열 평탄화화
+        const flat = wishMovies.flatMap((item) => item);
 
-        if (validData.length === 0) {
+        // 임베딩 벡터 없는 영화 제외외
+        const validMovies = flat.filter((movie) => movie.movie?.embedding_vector);
+
+        // 에러러
+        if (validMovies.length === 0) {
             throw new Error('벡터가 있는 영화가 존재하지 않습니다.');
         }
 
-        // 첫 번째 영화의 벡터로 차원 확인
-        const firstVector = JSON.parse(validData[0].movie.embedding_vector);
-        const dimensions = firstVector.length;
-        let totalVector: number[] = new Array(dimensions).fill(0);
+        // 벡터 수 구하기
+        const vector = JSON.parse(validMovies[0].movie.embedding_vector as string);
 
-        // 모든 영화 벡터의 평균 계산
-        validData.forEach((movie) => {
-            const vector = JSON.parse(movie.movie.embedding_vector);
+        // 차원 수 구하기
+        const dimensions = vector.length;
 
+        const totalVector = new Array(dimensions).fill(0);
+
+        validMovies.forEach((movie) => {
+            const vector = JSON.parse(movie.movie.embedding_vector as string);
             vector.forEach((v: number, index: number) => {
                 totalVector[index] += v;
             });
         });
 
-        // 평균 계산
-        totalVector = totalVector.map((v: number) => v / validData.length);
+        const averageVector = totalVector.map((vector: number) => vector / validMovies.length);
 
-        // L2 정규화 적용 (벡터의 방향성만 고려)
-        const norm = Math.sqrt(totalVector.reduce((sum, v) => sum + v * v, 0));
-
-        if (norm > 0) {
-            totalVector = totalVector.map((v) => v / norm);
-        }
-
-        // JSON 문자열로 변환하여 반환
-        return JSON.stringify(totalVector);
+        return JSON.stringify(averageVector);
     } catch (error) {
         throw new Error(`계산 중 오류: ${error instanceof Error ? error.message : '알 수 없는 오류'}`);
     }

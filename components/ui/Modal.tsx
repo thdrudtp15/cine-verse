@@ -57,13 +57,13 @@ const Modal = ({ children, isOpen, onClose }: ModalProps) => {
 
     useOnClickOutside({ ref: modalRef, onClickOutside: onClose });
 
-    useEffect(() => {
-        document.body.style.overflow = 'hidden';
-
-        return () => {
-            document.body.style.overflow = 'auto';
-        };
-    }, [isOpen]);
+    // useEffect(() => {
+    //     if (isOpen) {
+    //         document.body.style.overflow = 'hidden';
+    //     } else {
+    //         document.body.style.overflow = 'auto';
+    //     }
+    // }, [isOpen]);
 
     return (
         <AnimatePresence>
