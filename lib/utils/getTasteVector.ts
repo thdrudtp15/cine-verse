@@ -4,15 +4,12 @@ type wishMovies = WeightedInteraction;
 
 export const getTasteVector = (wishMovies: wishMovies[]) => {
     try {
-        // 모든 상호작용 영화 배열 평탄화화
         const flat = wishMovies.flatMap((item) => item);
 
-        // 임베딩 벡터 없는 영화 제외외
         const validMovies = flat.filter((movie) => movie.movie?.embedding_vector);
 
-        // 에러러
         if (validMovies.length === 0) {
-            throw new Error('벡터가 있는 영화가 존재하지 않습니다.');
+            throw new Error('벡터가 있는 영화가 존재하지 않습니다. 상호작용 데이터를 확인해주세요');
         }
 
         // 벡터 수 구하기
@@ -34,7 +31,7 @@ export const getTasteVector = (wishMovies: wishMovies[]) => {
 
         return JSON.stringify(averageVector);
     } catch (error) {
-        throw new Error(`계산 중 오류: ${error instanceof Error ? error.message : '알 수 없는 오류'}`);
+        throw new Error(`${error instanceof Error ? error.message : error}`);
     }
 
     // try {
