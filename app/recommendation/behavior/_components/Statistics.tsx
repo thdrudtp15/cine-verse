@@ -41,8 +41,6 @@ const Statistics = ({ behaviorStats }: StatisticsProps) => {
         },
     ].filter((item) => item.value > 0); // 값이 0인 항목 제외
 
-    if (totalInteractions === 0) return null;
-
     return (
         <div className="bg-background-elevated border border-border rounded-lg p-6 mb-8 shadow-lg shadow-black/20 ">
             <div className="flex items-center gap-3 mb-6">
@@ -59,9 +57,14 @@ const Statistics = ({ behaviorStats }: StatisticsProps) => {
 
             <div className="mx-auto">
                 {/* 파이 차트 */}
+
                 <div className="bg-background-tertiary rounded-lg p-6 border border-border/50">
                     <h3 className="text-lg font-semibold text-foreground mb-4">행동 유형별 분포</h3>
-                    <PieChart data={chartData} />
+                    {totalInteractions > 0 ? (
+                        <PieChart data={chartData} />
+                    ) : (
+                        <p className="text-sm text-foreground-secondary">행동 내역이 존재하지 않습니다.</p>
+                    )}
                 </div>
             </div>
         </div>

@@ -11,6 +11,10 @@ import {
 import { getImbedText } from '@/lib/utils/getImbedText';
 import { revalidateTag } from 'next/cache';
 
+import { getUserBehaviorData } from '@/lib/actions/getUserBehaviorData';
+import { getTasteVector } from '@/lib/utils/getTasteVector';
+import { getTasteMovies } from '@/lib/actions/getTasteMovies';
+
 import type { Movies } from '@/types/database';
 
 const getPrompt = (tasteMoviesText: string[]) => {
@@ -41,19 +45,20 @@ const getPrompt = (tasteMoviesText: string[]) => {
             BEGIN JSON NOW:`;
 };
 
-export const POST = async (request: Request) => {
+export const GET = async () => {
     const session = await getServerSession(authOptions);
 
     if (!session) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const body = await request.text();
-    const tasteMovies = JSON.parse(body);
-    const tasteMoviesText = tasteMovies.map((movie: Movies & { similarity?: number }) => getImbedText(movie));
-    const prompt = getPrompt(tasteMoviesText);
-
     try {
+        const userBehaviorData = await getUserBehaviorData(session.user.id);
+        const vector = getTasteVector(userBehaviorData.flat());
+        const tasteMovies = await getTasteMovies(vector.toString());
+
+        const tasteMoviesText = tasteMovies.data.map((movie: Movies & { similarity?: number }) => getImbedText(movie));
+        const prompt = getPrompt(tasteMoviesText);
         const recommendation = await getRecommendationByGemini(prompt);
         const recommendationList = await getRecommendationList(recommendation);
         await saveMovieListData(recommendationList);
@@ -68,7 +73,6 @@ export const POST = async (request: Request) => {
             { status: 200 }
         );
     } catch (error) {
-        console.error(error);
         return NextResponse.json(
             { error: error instanceof Error ? error.message : '알 수 없는 오류' },
             { status: 500 }

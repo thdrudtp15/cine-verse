@@ -1,8 +1,7 @@
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { redirect } from 'next/navigation';
-import { supabase } from '@/lib/utils/supabase';
-import { unstable_cache } from 'next/cache';
+
 import Image from 'next/image';
 import { User, Heart, Clock, Play, ExternalLink, Sparkles } from 'lucide-react';
 import Link from 'next/link';
@@ -11,44 +10,9 @@ import MyPageTabs from '../_components/MyPageTabs';
 import WishList from '../_components/WishList';
 import Stats from '../_components/Stats';
 import RecommendationHistory from '../_components/RecommendationHistory';
+import { getUserStatsCount } from '@/lib/actions/getUserStatsCount';
 
 import { notFound } from 'next/navigation';
-
-const getUserStatsCount = unstable_cache(
-    async (userId: string) => {
-        const [wishes, visits, videos, providers, recommendationHistoryBehavior, recommendationHistoryDialog] =
-            await Promise.all([
-                supabase.from('interactions_wishes').select('*', { count: 'exact', head: true }).eq('user_id', userId),
-                supabase.from('interactions_visits').select('*', { count: 'exact', head: true }).eq('user_id', userId),
-                supabase.from('interactions_videos').select('*', { count: 'exact', head: true }).eq('user_id', userId),
-                supabase
-                    .from('interactions_providers')
-                    .select('*', { count: 'exact', head: true })
-                    .eq('user_id', userId),
-                supabase
-                    .from('recommendations_history')
-                    .select('*', { count: 'exact', head: true })
-                    .eq('user_id', userId)
-                    .eq('recommendation_type', 'behavior'),
-                supabase
-                    .from('recommendations_history')
-                    .select('*', { count: 'exact', head: true })
-                    .eq('user_id', userId)
-                    .eq('recommendation_type', 'dialog'),
-            ]);
-
-        return {
-            wishes: wishes.count || 0,
-            visits: visits.count || 0,
-            videos: videos.count || 0,
-            providers: providers.count || 0,
-            recommendationHistoryBehavior: recommendationHistoryBehavior.count || 0,
-            recommendationHistoryDialog: recommendationHistoryDialog.count || 0,
-        };
-    },
-    ['user_stats_count'],
-    { tags: ['user_stats_count'], revalidate: 60 * 60 * 24 }
-);
 
 const MyPage = async ({
     params,
@@ -67,8 +31,6 @@ const MyPage = async ({
     if (!['wishlist', 'history', 'stats', 'recommendation', 'overview'].includes(tab)) {
         notFound();
     }
-
-    // const stats = await getUserStats(session.user.id);
 
     const statsCount = await getUserStatsCount(session.user.id);
 

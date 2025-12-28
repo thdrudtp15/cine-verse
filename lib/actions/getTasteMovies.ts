@@ -3,11 +3,10 @@ import type { MovieListItem } from '@/types/movieList';
 
 export const getTasteMovies = async (tasteVector: string, excludeMovieIds: number[] = []) => {
     try {
-        // tasteVector는 이미 JSON.stringify된 문자열이므로 그대로 사용
         const result = await supabase.rpc('match_movies', {
             taste_embedding: tasteVector,
-            match_threshold: 0.7, // 임계값을 0.6에서 0.7로 높여서 더 정확한 추천만 받기
-            match_count: 20, // 더 많이 가져온 후 필터링
+            match_threshold: 0.7,
+            match_count: 20,
         });
 
         if (result.error) {

@@ -9,10 +9,9 @@ import { SERVER_URL } from '@/constants/constans';
 /**
  * 추천 API 호출 함수
  */
-const getRecommendation = async (tasteMovies: TasteMovies[]) => {
+const getRecommendation = async () => {
     const response = await fetch(`${SERVER_URL}/api/recommendation/behavior`, {
-        method: 'POST',
-        body: JSON.stringify(tasteMovies),
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json',
         },
@@ -26,30 +25,20 @@ const getRecommendation = async (tasteMovies: TasteMovies[]) => {
     return await response.json();
 };
 
-/**
- * 행동분석 기반 영화 추천 컴포넌트
- */
-interface TasteMovies {
-    title: string;
-    original_title: string;
-    overview: string;
-    tagline: string;
-    genres: string;
-    similarity: number;
-}
-
-const Recommendation = ({ tasteMovies }: { tasteMovies: TasteMovies[] }) => {
+const Recommendation = () => {
     const queryClient = useQueryClient();
 
     const { data, isLoading, error, refetch, isError } = useQuery({
-        queryKey: ['recommendation', tasteMovies],
-        queryFn: () => getRecommendation(tasteMovies),
+        queryKey: ['recommendation'],
+        queryFn: () => getRecommendation(),
         enabled: false,
         retry: false, // 에러 발생 시 자동 재시도 방지
     });
 
     // 에러 메시지 추출
     const errorMessage = error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.';
+
+    console.log(error);
 
     const { recommendationList } = data || { recommendationList: [] };
 
